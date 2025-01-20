@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
+from django.db import transaction
 import datetime
 
 STATUS = ((0, "Pending"), (1, "Approved"), (2, "Rejected"))
@@ -15,7 +16,27 @@ class Order(models.Model):
         )
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=STATUS, default=0)
-    total_amount_items = models.PositiveIntegerField(default=0)
+
+    def approve(self):
+        """
+        Approves an order if stock is enough.
+        """
+        if self.status != 0:
+            raise ValidationError("The order was already processed.")
+        
+        with transaction.atomic():
+            for order_item in self.items.all():
+                if order_item.quantity > order_item.item.quantity_in_stock:
+                    self.status = 2
+                    self.save()
+                    return
+                
+            for order_item in self.items.all():
+                order_item.item.quantity_in_stock -= order_item.quantity
+                order_item.item.save()
+
+            self.status = 1
+            self.save()
 
     class Meta:
         ordering = ['-created_at']
@@ -73,6 +94,23 @@ class OrderItem(models.Model):
         Item, on_delete=models.CASCADE, related_name='order_items'
     )
     quantity = models.PositiveIntegerField()
+
+    def clean(self):
+        """
+        Validates the quantity of an item.
+        """
+        if self.quantity > self.item.quantity_in_stock:
+            raise ValidationError(
+                f"""The quantity must be less than or 
+equal to the quantity in stock ({self.item.quantity_in_stock})."""
+                )
+        
+    def save(self, *args, **kwargs):
+        """
+        Updates the quantity in stock of an item.
+        """
+        self.full_clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.quantity} of {self.item.name}"
