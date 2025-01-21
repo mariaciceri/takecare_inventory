@@ -7,7 +7,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ('id', 'status', 'created_at', 'user')
     list_filter = ('status', 'created_at')
     search_fields = ('id', 'user__username')
-    ordering = ('-created_at',)
+    ordering = ('status', 'created_at')
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
