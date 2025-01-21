@@ -6,7 +6,6 @@ import datetime
 
 STATUS = ((0, "Pending"), (1, "Approved"), (2, "Rejected"))
 
-
 class Order(models.Model):
     """
     Stores the order details of a user.
@@ -31,15 +30,11 @@ class Order(models.Model):
                     self.save()
                     return
                 
-            for order_item in self.items.all():
                 order_item.item.quantity_in_stock -= order_item.quantity
                 order_item.item.save()
 
             self.status = 1
             self.save()
-
-    class Meta:
-        ordering = ['-created_at']
 
     def __str__(self):
         return f"Order {self.id} by {self.user.username}"
@@ -104,13 +99,6 @@ class OrderItem(models.Model):
                 f"""The quantity must be less than or 
 equal to the quantity in stock ({self.item.quantity_in_stock})."""
                 )
-        
-    def save(self, *args, **kwargs):
-        """
-        Updates the quantity in stock of an item.
-        """
-        self.full_clean()
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.quantity} of {self.item.name}"
