@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User
 from django.db import transaction
 import datetime
@@ -31,26 +32,6 @@ class Order(models.Model):
                     )
                 order_item.item.quantity_in_stock -= order_item.quantity
                 order_item.item.save()
-    
-    def save(self, *args, **kwargs):
-        if self.pk:
-            original = Order.objects.get(pk=self.pk)
-            if original.status == 1 and self.status != 1:
-                raise ValidationError("Approved orders cannot be modified.")
-        else:
-            if self.status == 1:
-                raise ValidationError("Orders cannot be approved directly on creation.")
-
-        super().save(*args, **kwargs)
-
-    # def clean(self):
-    #     """
-    #     Prevent the status of an order from being changed after approved or rejected.
-    #     """
-    #     if self.pk:
-    #         previous_status = Order.objects.get(pk=self.pk).status
-    #         if previous_status in [1, 2] and self.status != previous_status:
-    #             raise ValidationError("The status of an order cannot be changed after approval or rejection.")
     
 class Category(models.Model):
     """
@@ -101,17 +82,23 @@ class OrderItem(models.Model):
     item = models.ForeignKey(
         Item, on_delete=models.CASCADE, related_name='order_items'
     )
-    quantity = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField(
+        validators=[MinValueValidator(1)]
+    )
 
     def clean(self):
         """
         Validates the quantity of an item.
         """
+        if not self.item_id or not self.order_id or self.quantity is None:
+            raise ValidationError("All fields must be provided.")
+        
         if self.quantity > self.item.quantity_in_stock:
             raise ValidationError(
                 f"""The quantity must be less than or 
 equal to the quantity in stock ({self.item.quantity_in_stock})."""
                 )
+
 
     def __str__(self):
         return f"{self.quantity} {self.item.name}. Order: {self.order.id}"

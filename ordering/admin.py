@@ -16,7 +16,6 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ('id', 'user__username')
     ordering = ('status', 'created_at')
     inlines = [OrderItemInline]
-    actions = ['approve_order']
 
     def get_readonly_fields(self, request, obj=None):
         """
@@ -41,6 +40,7 @@ class OrderAdmin(admin.ModelAdmin):
         for order in queryset:
             try:
                 if order.status == 0:
+                    order.approve()
                     order.status = 1
                     order.save()
                     self.message_user(
@@ -86,17 +86,16 @@ class OrderAdmin(admin.ModelAdmin):
     
     actions = ['approve_orders', 'reject_orders']
 
-    def save_model(self, request, obj, form, change):
-        if change:
-            original = Order.objects.get(pk=obj.pk)
-            if original.status == 0 and obj.status == 1:
-                obj.approve()
-        super().save_model(request, obj, form, change)
-
-
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'quantity_in_stock', 'is_critical', 'expiration_date', 'low_stock_alert')
+    list_display = (
+        'name',
+        'category',
+        'quantity_in_stock',
+        'is_critical',
+        'expiration_date',
+        'low_stock_alert'
+        )
     list_filter = ('category', 'expiration_date', 'is_critical')
     search_fields = ('name', 'category__name')
     ordering = ('quantity_in_stock', 'name')
@@ -106,9 +105,11 @@ class ItemAdmin(admin.ModelAdmin):
         Adds a 'Low Stock' warning for items with quantity below 100.
         """
         if obj.quantity_in_stock < 100:
-            return format_html('<span style="color: red; font-weight: bold;">Low Stock</span>')
+            return format_html(
+                '<span style="color: red; font-weight: bold;">Low Stock</span>'
+                )
         return ""
 
 
 admin.site.register(Category) 
-admin.site.register(OrderItem) 
+admin.site.register(OrderItem)
