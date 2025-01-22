@@ -1,6 +1,13 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.utils.html import format_html
+from django.core.exceptions import ValidationError
 from .models import Order, Category, Item, OrderItem
+
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 0
+    readonly_fields = ['item', 'quantity']
+    can_delete = False
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
@@ -8,6 +15,84 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ('status', 'created_at')
     search_fields = ('id', 'user__username')
     ordering = ('status', 'created_at')
+    inlines = [OrderItemInline]
+    actions = ['approve_order']
+
+    def get_readonly_fields(self, request, obj=None):
+        """
+        Makes all fields read-only.
+        """
+        if obj:
+            return [field.name for field in self.model._meta.fields]
+        return []
+    
+    def has_change_permission(self, request, obj=None):
+        """
+        Disables the change permission.
+        """
+        if obj:
+            return False
+        return True
+
+    def approve_orders(self, request, queryset):
+        """
+        Approves the selected orders.
+        """
+        for order in queryset:
+            try:
+                if order.status == 0:
+                    order.status = 1
+                    order.save()
+                    self.message_user(
+                        request, f"Order {order.id} was approved."
+                        )
+                else:
+                    self.message_user(
+                        request,
+                        f"Order {order.id} was already processed.",
+                        level=messages.WARNING
+                        )
+            except Exception as e:
+                self.message_user(
+                    request,
+                    f"Order {order.id} could not be approved: {e}",
+                    level=messages.ERROR
+                    )
+
+    def reject_orders(self, request, queryset):
+        """
+        Rejects the selected orders.
+        """
+        for order in queryset:
+            try:
+                if order.status == 0:
+                    order.status = 2
+                    order.save()
+                    self.message_user(
+                        request, f"Order {order.id} was rejected."
+                        )
+                else:
+                    self.message_user(
+                        request,
+                        f"Order {order.id} was already processed.",
+                        level=messages.WARNING
+                        )
+            except Exception as e:
+                self.message_user(
+                    request,
+                    f"Order {order.id} could not be rejected: {e}",
+                    level=messages.ERROR
+                    )
+    
+    actions = ['approve_orders', 'reject_orders']
+
+    def save_model(self, request, obj, form, change):
+        if change:
+            original = Order.objects.get(pk=obj.pk)
+            if original.status == 0 and obj.status == 1:
+                obj.approve()
+        super().save_model(request, obj, form, change)
+
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):

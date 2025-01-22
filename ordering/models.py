@@ -16,28 +16,41 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=STATUS, default=0)
 
+    def __str__(self):
+        return f"Order {self.id} by {self.user.username}"
+        
     def approve(self):
-        """
-        Approves an order if stock is enough.
-        """
         if self.status != 0:
             raise ValidationError("The order was already processed.")
-        
+
         with transaction.atomic():
             for order_item in self.items.all():
                 if order_item.quantity > order_item.item.quantity_in_stock:
-                    self.status = 2
-                    self.save()
-                    return
-                
+                    raise ValidationError(
+                        f"Insufficient stock for item {order_item.item.name}."
+                    )
                 order_item.item.quantity_in_stock -= order_item.quantity
                 order_item.item.save()
+    
+    def save(self, *args, **kwargs):
+        if self.pk:
+            original = Order.objects.get(pk=self.pk)
+            if original.status == 1 and self.status != 1:
+                raise ValidationError("Approved orders cannot be modified.")
+        else:
+            if self.status == 1:
+                raise ValidationError("Orders cannot be approved directly on creation.")
 
-            self.status = 1
-            self.save()
+        super().save(*args, **kwargs)
 
-    def __str__(self):
-        return f"Order {self.id} by {self.user.username}"
+    # def clean(self):
+    #     """
+    #     Prevent the status of an order from being changed after approved or rejected.
+    #     """
+    #     if self.pk:
+    #         previous_status = Order.objects.get(pk=self.pk).status
+    #         if previous_status in [1, 2] and self.status != previous_status:
+    #             raise ValidationError("The status of an order cannot be changed after approval or rejection.")
     
 class Category(models.Model):
     """
@@ -101,5 +114,5 @@ equal to the quantity in stock ({self.item.quantity_in_stock})."""
                 )
 
     def __str__(self):
-        return f"{self.quantity} of {self.item.name}"
+        return f"{self.quantity} {self.item.name}. Order: {self.order.id}"
     
