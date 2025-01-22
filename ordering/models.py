@@ -1,18 +1,22 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 from django.db import transaction
 import datetime
 
 STATUS = ((0, "Pending"), (1, "Approved"), (2, "Rejected"))
+
+class CustomUser(AbstractUser):
+    is_approved = models.BooleanField(default=False)
 
 class Order(models.Model):
     """
     Stores the order details of a user.
     """
     user = models.ForeignKey( 
-        User, on_delete=models.CASCADE, related_name='orders'
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders'
         )
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=STATUS, default=0)
@@ -88,7 +92,7 @@ class OrderItem(models.Model):
 
     def clean(self):
         """
-        Validates the quantity of an item.
+        Validates the fields and if quantity is available in stock.
         """
         if not self.item_id or not self.order_id or self.quantity is None:
             raise ValidationError("All fields must be provided.")

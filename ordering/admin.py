@@ -1,7 +1,6 @@
 from django.contrib import admin, messages
 from django.utils.html import format_html
-from django.core.exceptions import ValidationError
-from .models import Order, Category, Item, OrderItem
+from .models import CustomUser, Order, Category, Item, OrderItem
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
@@ -110,6 +109,12 @@ class ItemAdmin(admin.ModelAdmin):
                 )
         return ""
 
+@admin.register(CustomUser)
+class CustomUserAdmin(admin.ModelAdmin):
+    list_display = ('username', 'email', 'is_approved')
+    list_filter = ('is_approved',)
+    search_fields = ('username', 'email')
 
+  
 admin.site.register(Category) 
 admin.site.register(OrderItem)
