@@ -118,3 +118,4 @@ class CustomUserAdmin(admin.ModelAdmin):
   
 admin.site.register(Category) 
 admin.site.register(OrderItem)
+admin.site.site_header = 'TakeCare System Administration'
