@@ -1,6 +1,9 @@
 from django.contrib import admin, messages
 from django.utils.html import format_html
 from .models import CustomUser, Order, Category, Item, OrderItem
+from django.forms import DateInput
+import datetime
+
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
@@ -92,12 +95,24 @@ class ItemAdmin(admin.ModelAdmin):
         'category',
         'quantity_in_stock',
         'is_critical',
-        'expiration_date',
-        'low_stock_alert'
+        'low_stock_alert',
+        'close_exp_date'
         )
     list_filter = ('category', 'expiration_date', 'is_critical')
     search_fields = ('name', 'category__name')
     ordering = ('quantity_in_stock', 'name')
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        """
+        Adds a date picker for the expiration date field.
+        """
+        if db_field.name == "expiration_date":
+            kwargs['widget'] = DateInput(attrs={
+                'type': 'date',
+                'min': datetime.date.today() + datetime.timedelta(days=1),
+                'class': 'date-field'
+                })
+        return super().formfield_for_dbfield(db_field, **kwargs)
 
     def low_stock_alert(self, obj):
         """
@@ -108,6 +123,17 @@ class ItemAdmin(admin.ModelAdmin):
                 '<span style="color: red; font-weight: bold;">Low Stock</span>'
                 )
         return ""
+    
+    def close_exp_date(self, obj):
+        """
+        Adds a 'Close Expiration Date' warning for items with expiration date
+        """
+        if obj.expiration_date < datetime.date.today() + datetime.timedelta(days=30):
+            return format_html(
+                '<span style="color: red; font-weight: bold;">Close Expiration Date</span>'
+                )
+        return ""
+        
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
