@@ -1,0 +1,22 @@
+{% url 'account_logout' as logout_url %}
+
+{% if user.is_authenticated and user.is_approved %}
+<form method="post" id="order-form">
+    {% csrf_token %}
+    <input type="text" name="item" id="item">
+    <input type="number" name="item-quantity" id="item-quantity" min="1">
+    <button class="add-item">Add</button>
+    <button type="submit">Order</button>
+</form>
+
+
+
+
+{% else %}
+YOUVE FAILED THE TEST
+{% endif %}
+
+
+
+<a class="nav-link {% if request.path == logout_url %}active" aria-current="page{% endif %}"
+    href="{{ logout_url}}">Logout</a>
