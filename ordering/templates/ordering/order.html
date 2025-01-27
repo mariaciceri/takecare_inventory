@@ -1,13 +1,19 @@
+{% load static %}
 {% url 'account_logout' as logout_url %}
 
 {% if user.is_authenticated and user.is_approved %}
-<form method="post" id="order-form">
+<form method="post" id="order-form" action="{% url 'create_order' %}">
     {% csrf_token %}
-    <input type="text" name="item" id="item">
+    <select name="item" id="item">
+        {% for item in items %}
+        <option value="{{ item.id }}">{{ item.name }}</option>
+        {% endfor %}
+    </select>
     <input type="number" name="item-quantity" id="item-quantity" min="1">
-    <button class="add-item">Add</button>
-    <button type="submit">Order</button>
+    <button type="button" class="add-item" data-action="{% url 'add_item_to_session' %}">Add</button>
+    <button type="submit" class="submit-order">Order</button>
 </form>
+<div id="message"></div>
 
 
 
@@ -20,3 +26,6 @@ YOUVE FAILED THE TEST
 
 <a class="nav-link {% if request.path == logout_url %}active" aria-current="page{% endif %}"
     href="{{ logout_url}}">Logout</a>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/order.js' %}"></script>
