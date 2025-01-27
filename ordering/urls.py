@@ -2,6 +2,8 @@ from . import views
 from django.urls import path
 
 urlpatterns = [
-    path('', views.order, name='order'),
-    path('orders/', views.order_view, name='order_view'),
+    path("", views.order, name="order"),
+    path("add_item_to_session/", views.add_item_to_session, name="add_item_to_session"),
+    path("create_order/", views.create_order, name="create_order"),
+    path("orders/", views.order_view, name="order_view"),
 ]
