@@ -1,7 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.forms import modelformset_factory
 from django.http import JsonResponse
+from django.db import transaction
 from .models import Order, CustomUser, OrderItem, Item
 from .forms import OrderForm, OrderItemForm, OrderItemInlineForm
 
@@ -12,11 +14,15 @@ OrderItemFormSet = modelformset_factory(
 @login_required
 def order(request):
     user = request.user
+    items = Item.objects.all()
 
     return render(
         request,
         'ordering/order.html',
-        {'user': user}
+            {
+            "user": user,
+            "items": items
+            }
         )
 
 @login_required
@@ -30,32 +36,87 @@ def order_view(request):
         {'orders': orders}
         )
 
+@csrf_exempt
+@login_required
+def add_item_to_session(request):
+    if request.method == 'POST':
+        item_id = request.POST.get("item")
+        quantity = request.POST.get("item-quantity")
+
+        if not quantity or not quantity.isdigit() or int(quantity) <= 0:
+            return JsonResponse(
+                {
+                    "error": "Invalid item or quantity.",
+                    "message": "The quantity must be a positive number."
+                },
+                status=400
+            )
+
+        quantity = int(quantity)
+        
+        item = get_object_or_404(Item, id=item_id)
+
+        if quantity > item.quantity_in_stock:
+                return JsonResponse(
+                {
+                    "error": "Insufficient stock.",
+                    "message": f"Only {item.quantity_in_stock} {item.name} available."
+                },
+                status=400
+            )
+            
+        order_items = request.session.get("order_items", [])
+
+        for item_in_order in order_items:
+            if item_in_order["item_id"] == item_id:
+                if item_in_order["quantity"] + quantity > item.quantity_in_stock:
+                    return JsonResponse(
+                        {
+                            "error": "Insufficient stock.",
+                            "message": f"Only {item.quantity_in_stock} {item.name} available."
+                        },
+                        status=400
+                    )
+                item_in_order["quantity"] += quantity
+                break
+        else:
+            order_items.append({"item_id": item_id, "quantity": quantity})
+
+        request.session["order_items"] = order_items
+
+        return JsonResponse({"success": "Item added to order."})
+
 @login_required
 def create_order(request):
+    print("create order")
     if request.method == 'POST':
-        order = Order(user=request.user)
-        order.save()
+        order_items = request.session.get("order_items", [])
+        if not order_items:
+            return JsonResponse({"error": "No items to order."}, status=400)
+        
+        try:
 
-        # Get the order items stored in the session
-        order_items_data = request.session.get('order_items', [])
+            # Create the order
+            order = Order(user=request.user)
+            order.save()
 
-        if not order_items_data:
-            # If no items are selected, show an error
-            return JsonResponse({"error": "No items selected."})
+            # Create the order items
+            for item_data in order_items:
+                item = Item.objects.get(id=item_data['item_id'])
+                quantity = item_data['quantity']
 
-        # Loop through the stored items and create OrderItems
-        for item_data in order_items_data:
-            item = Item.objects.get(id=item_data['item_id'])
-            quantity = item_data['quantity']
+                order_item = OrderItem(
+                    order=order,
+                    item=item,
+                    quantity=quantity
+                    )
+                order_item.save()
 
-            # Create OrderItem and associate with the created order
-            order_item = OrderItem(order=order, item=item, quantity=quantity)
-            order_item.save()
+            # Clear the session
+            del request.session["order_items"]
 
-        # Clear the session data
-        request.session['order_items'] = []
+            return JsonResponse({"success": "Order created successfully."})
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
 
-        return redirect('order_list.html')
-    else:
-        # Display the order form (initial load or if GET request)
-        return render(request, 'create_order.html')
+    return JsonResponse({"error": "Invalid request method."}, status=405)
