@@ -36,6 +36,19 @@ def order_view(request):
         {'orders': orders}
         )
 
+@login_required
+def session_items(request):
+    try:
+        order_items = request.session.get("order_items", [])
+        return JsonResponse(
+            {
+                "success": "Order items retrieved successfully.",
+                "order_items": order_items
+            }
+        )
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
 @csrf_exempt
 @login_required
 def add_item_to_session(request):
@@ -80,15 +93,20 @@ def add_item_to_session(request):
                 item_in_order["quantity"] += quantity
                 break
         else:
-            order_items.append({"item_id": item_id, "quantity": quantity})
+            order_items.append({"item_id": item_id, "name": item.name ,"quantity": quantity})
 
         request.session["order_items"] = order_items
 
-        return JsonResponse({"success": "Item added to order."})
+        return JsonResponse(
+            {
+                "success": "Item added to order.",
+                "order_items": order_items
+            }
+            )
+    return JsonResponse({"error": "Invalid request method."}, status=405)
 
 @login_required
 def create_order(request):
-    print("create order")
     if request.method == 'POST':
         order_items = request.session.get("order_items", [])
         if not order_items:
