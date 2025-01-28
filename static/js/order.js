@@ -7,8 +7,9 @@ $(document).ready(function () {
             $("#item-list").empty();
             response.order_items.forEach(item => {
                 $("#item-list").prepend(
-                    `<li data-id="${item.item_id}">${item.name} - ${item.quantity}</li>
+                    `<li data-id="${item.item_id}">${item.name} - <input type="number" value="${item.quantity}" min="1" class="item-quantity-adjust">
                         <button class="remove-item" data-item_id="${item.item_id}">&times;</button>
+                        </li>
                         `
                 )
             });
@@ -39,7 +40,7 @@ $(document).ready(function () {
 
                 response.order_items.forEach(item => {
                     $("#item-list").prepend(
-                        `<li data-id="${item.item_id}">${item.name} - ${item.quantity}
+                        `<li data-id="${item.item_id}">${item.name} - <input type="number" value="${item.quantity}" min="1" class="item-quantity-adjust">
                         <button class="remove-item" data-item_id="${item.item_id}">&times;</button>
                         </li>
                         `
@@ -76,6 +77,28 @@ $(document).ready(function () {
     })
 
     // Update item quantity in cart
+    $("#item-list").on("change", ".item-quantity-adjust", function (e) {
+        e.preventDefault();
+
+        let itemId = $(this).parent().attr("data-id");
+        let quantity = $(this).val();
+
+        $.post(`/update_item_quantity/${itemId}`,
+            {
+                csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
+                quantity: quantity,
+            },
+            function (response) {
+                if (response.success) {
+                    console.log("YEAH BABE")
+                }
+                else {
+                    console.log("NOPE")
+                }
+            },
+            "json"
+        )
+    });
 
     // Place an order
     $("#order-form").submit(function (e) {

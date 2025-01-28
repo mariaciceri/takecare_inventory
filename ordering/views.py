@@ -143,8 +143,6 @@ def delete_item(request, item_id):
     if request.method == "POST":
         order_items = request.session.get("order_items", [])
 
-        item_id = str(item_id)
-
         order_items = [item for item in order_items if item["item_id"] != item_id]
 
         request.session["order_items"] = order_items
@@ -154,3 +152,25 @@ def delete_item(request, item_id):
                 "order_items": order_items
             }
         )
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+@login_required
+def update_item_quantity(request, item_id):
+    if request.method == "POST":
+        quantity = request.POST.get("quantity")
+
+        order_items = request.session.get("order_items", [])
+        
+        for item in order_items:
+            if item["item_id"] == item_id:
+                item["quantity"] = int(quantity)
+                break
+
+        request.session["order_items"] = order_items
+        return JsonResponse(
+            {
+                "success": "Item quantity updated.",
+                "order_items": order_items
+            }
+        )
+    return JsonResponse({"error": "Invalid request method."}, status=405)
