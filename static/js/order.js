@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     // Populate with session items
     $.ajax({
         type: "GET",
@@ -9,7 +8,7 @@ $(document).ready(function () {
             response.order_items.forEach(item => {
                 $("#item-list").prepend(
                     `<li data-id="${item.item_id}">${item.name} - ${item.quantity}</li>
-                        <button class="remove-item" data-action="remove/${item.item_id}">&times;</button>
+                        <button class="remove-item" data-item_id="${item.item_id}">&times;</button>
                         `
                 )
             });
@@ -40,8 +39,9 @@ $(document).ready(function () {
 
                 response.order_items.forEach(item => {
                     $("#item-list").prepend(
-                        `<li data-id="${item.item_id}">${item.name} - ${item.quantity}</li>
-                        <button class="remove-item" data-action="/order/remove/${item.item_id}">&times;</button>
+                        `<li data-id="${item.item_id}">${item.name} - ${item.quantity}
+                        <button class="remove-item" data-item_id="${item.item_id}">&times;</button>
+                        </li>
                         `
                     )
                 });
@@ -55,7 +55,25 @@ $(document).ready(function () {
             }
         });
     });
+
     // Remove item from cart
+    $("#item-list").on("click", ".remove-item", function (e) {
+        e.preventDefault();
+
+        let itemId = $(this).attr("data-item_id");
+
+        $.post(`/delete_item/${itemId}`,
+            {
+                csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
+            },
+            function (response) {
+                if (response.success) {
+                    $(`li[data-id="${itemId}"]`).remove();
+                }
+            },
+            "json"
+        )
+    })
 
     // Update item quantity in cart
 

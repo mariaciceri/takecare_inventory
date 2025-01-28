@@ -3,9 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.forms import modelformset_factory
 from django.http import JsonResponse
-from django.db import transaction
-from .models import Order, CustomUser, OrderItem, Item
-from .forms import OrderForm, OrderItemForm, OrderItemInlineForm
+from .models import Order, OrderItem, Item
+from .forms import OrderItemInlineForm
 
 OrderItemFormSet = modelformset_factory(
     OrderItem, form=OrderItemInlineForm
@@ -52,7 +51,7 @@ def session_items(request):
 @csrf_exempt
 @login_required
 def add_item_to_session(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         item_id = request.POST.get("item")
         quantity = request.POST.get("item-quantity")
 
@@ -107,7 +106,7 @@ def add_item_to_session(request):
 
 @login_required
 def create_order(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         order_items = request.session.get("order_items", [])
         if not order_items:
             return JsonResponse({"error": "No items to order."}, status=400)
@@ -138,3 +137,20 @@ def create_order(request):
             return JsonResponse({"error": str(e)}, status=400)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
+
+@login_required
+def delete_item(request, item_id):
+    if request.method == "POST":
+        order_items = request.session.get("order_items", [])
+
+        item_id = str(item_id)
+
+        order_items = [item for item in order_items if item["item_id"] != item_id]
+
+        request.session["order_items"] = order_items
+        return JsonResponse(
+            {
+                "success": "Item removed from order.",
+                "order_items": order_items
+            }
+        )
