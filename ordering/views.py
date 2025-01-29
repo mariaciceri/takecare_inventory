@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.forms import modelformset_factory
 from django.http import JsonResponse
-from .models import Order, OrderItem, Item
+from .models import Order, OrderItem, Item, Category
 from .forms import OrderItemInlineForm
 
 OrderItemFormSet = modelformset_factory(
@@ -14,13 +14,15 @@ OrderItemFormSet = modelformset_factory(
 def order(request):
     user = request.user
     items = Item.objects.all()
+    categories = Category.objects.all()
 
     return render(
         request,
         'ordering/order.html',
             {
             "user": user,
-            "items": items
+            "items": items,
+            "categories": categories
             }
         )
 
@@ -28,11 +30,10 @@ def order(request):
 def order_view(request):
     user = request.user
     orders = Order.objects.filter(user=user).order_by("-created_at")
-
     return render(
         request,
-        'ordering/order_list.html',
-        {'orders': orders}
+        "ordering/order_list.html",
+        {"orders": orders}
         )
 
 @login_required
