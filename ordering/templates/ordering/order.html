@@ -2,6 +2,9 @@
 {% url 'account_logout' as logout_url %}
 
 {% if user.is_authenticated and user.is_approved %}
+
+<a href="orders/">Orders</a>
+
 <form method="post" id="order-form" action="{% url 'create_order' %}">
     {% csrf_token %}
     <select name="item" id="item">
@@ -20,8 +23,9 @@
     <h2>Items</h2>
     <ul id="item-list">
     </ul>
-    <h2>Total: <span id="total">{{ total }}</span></h2>
 </div>
+
+
 
 
 

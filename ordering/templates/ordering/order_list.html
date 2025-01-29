@@ -1,1 +1,29 @@
-ORDERS GO HERE
+{% load static %}
+
+
+
+{% if user.is_authenticated and user.is_approved %}
+
+<a href="/">Home page</a>
+
+
+{% for order in orders %}
+<ul>
+    <li>
+        <a href="#" data-id="{{ order.id }}" id="order-{{ order.id }}">Order: {{ order.id }}</a>
+        {{ order.get_status_display }}
+    </li>
+</ul>
+{% endfor %}
+<div>
+    <ul id="order-details">
+
+    </ul>
+</div>
+
+{% else %}
+YOUVE FAILED THE TEST
+{% endif %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/order.js' %}"></script>

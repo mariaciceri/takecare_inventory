@@ -1,23 +1,26 @@
 $(document).ready(function () {
-    // Populate with session items
-    $.ajax({
-        type: "GET",
-        url: "session_items",
-        success: function (response) {
-            $("#item-list").empty();
-            response.order_items.forEach(item => {
-                $("#item-list").prepend(
-                    `<li data-id="${item.item_id}">${item.name} - <input type="number" value="${item.quantity}" min="1" class="item-quantity-adjust">
+
+    if (window.location.pathname === "/") {
+        // Populate with session items
+        $.ajax({
+            type: "GET",
+            url: "session_items",
+            success: function (response) {
+                $("#item-list").empty();
+                response.order_items.forEach(item => {
+                    $("#item-list").prepend(
+                        `<li data-id="${item.item_id}">${item.name} - <input type="number" value="${item.quantity}" min="1" class="item-quantity-adjust">
                         <button class="remove-item" data-item_id="${item.item_id}">&times;</button>
                         </li>
                         `
-                )
-            });
-        },
-        error: function (error) {
-            console.log('ERROR', error)
-        }
-    });
+                    )
+                });
+            },
+            error: function (error) {
+                console.log('ERROR', error)
+            }
+        });
+    }
 
     // Add item to cart
     $(".add-item").click(function (e) {
@@ -83,6 +86,21 @@ $(document).ready(function () {
         let itemId = $(this).parent().attr("data-id");
         let quantity = $(this).val();
 
+        // TODO : make it a nice transition
+        if (quantity < 1) {
+            $.post(`/delete_item/${itemId}`,
+                {
+                    csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
+                },
+                function (response) {
+                    if (response.success) {
+                        $(`li[data-id="${itemId}"]`).remove();
+                    }
+                },
+                "json"
+            )
+        }
+
         $.post(`/update_item_quantity/${itemId}`,
             {
                 csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
@@ -116,7 +134,8 @@ $(document).ready(function () {
                     `<div class="success" role="alert">
                     ${response.success}
                     </div>`
-                )
+                );
+                $("#item-list").empty();
             },
             error: function (error) {
                 $("#message").html(
@@ -127,4 +146,28 @@ $(document).ready(function () {
             }
         })
     });
+
+    // Display items in past orders
+    $("a[data-id]").on("click", function (e) {
+        e.preventDefault();
+
+        let orderId = $(this).data("id");
+
+        $.ajax({
+            type: "GET",
+            url: "/orders/order" + orderId + "/",
+            success: function (response) {
+                $("#order-details").empty();
+                response.order_items.forEach(function (item) {
+                    $("#order-details").prepend(
+                        `<li>${item.name} - ${item.quantity}</li>`
+                    )
+                })
+            },
+            error: function (error) {
+                console.log('Error fetching order items:', error);
+                $("#order-details").html("<p>Failed to load order items.</p>");
+            }
+        })
+    })
 });

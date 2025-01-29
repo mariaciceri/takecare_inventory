@@ -27,13 +27,33 @@ def order(request):
 @login_required
 def order_view(request):
     user = request.user
-    orders = Order.objects.filter(user=user)
+    orders = Order.objects.filter(user=user).order_by("-created_at")
 
     return render(
         request,
         'ordering/order_list.html',
         {'orders': orders}
         )
+
+@login_required
+def order_items(request, order_id):
+    try:
+        order = Order.objects.get(id=order_id, user=request.user)
+        order_items = order.items.all()
+
+        order_items_list = [
+            {
+                "name": item.item.name,
+                "quantity": item.quantity,
+            }
+            for item in order_items
+        ]
+
+        print("ORDER ITEMS", order_items_list)
+
+        return JsonResponse({"order_items": order_items_list})
+    except Order.DoesNotExist:
+        return JsonResponse({"error": "Order not found."}, status=404)
 
 @login_required
 def session_items(request):
@@ -160,6 +180,15 @@ def update_item_quantity(request, item_id):
         quantity = request.POST.get("quantity")
 
         order_items = request.session.get("order_items", [])
+
+        if not quantity or not quantity.isdigit() or int(quantity) <= 0:
+            return JsonResponse(
+                {
+                    "error": "Invalid item or quantity.",
+                    "message": "The quantity must be a positive number."
+                },
+                status=400
+            )
         
         for item in order_items:
             if item["item_id"] == item_id:
@@ -174,3 +203,7 @@ def update_item_quantity(request, item_id):
             }
         )
     return JsonResponse({"error": "Invalid request method."}, status=405)
+
+@login_required
+def edit_order(request, order_id):
+    pass
