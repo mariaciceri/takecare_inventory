@@ -10,7 +10,7 @@ $(document).ready(function () {
                     $("#item-list").prepend(
                         `<li data-id="${item.item_id}">${item.name} - <input type="number" value="${item.quantity}"
                         min="1" class="item-quantity-adjust">
-                        <button class="remove-item" data-item_id="${item.item_id}">&times;</button>
+                        <button class="remove-item waves-effect waves-light btn-small" data-item_id="${item.item_id}">&times;</button>
                         </li>
                         `
                     )
@@ -45,7 +45,7 @@ $(document).ready(function () {
                     $("#item-list").prepend(
                         `<li data-id="${item.item_id}">${item.name} - <input type="number" value="${item.quantity}"
                         min="1" class="item-quantity-adjust">
-                        <button class="remove-item" data-item_id="${item.item_id}">&times;</button>
+                        <button class="remove-item waves-effect waves-light btn-small" data-item_id="${item.item_id}">&times;</button>
                         </li>
                         `
                     )
@@ -168,7 +168,7 @@ $(document).ready(function () {
 
                 const isDisabled = response.status !== 0;
                 $("#order-details").append(
-                    `<button type="button" class="edit-order" data-id="${orderId}" ${isDisabled ? 'disabled' : ''}>
+                    `<button type="button" class="edit-order ${isDisabled ? 'btn-flat disabled' : 'waves-effect waves-light btn-small'}" data-id="${orderId}">
                             Edit Order
                         </button>`
                 );
@@ -207,13 +207,11 @@ $(document).ready(function () {
             url: `/filter_items/${category}`,
             success: function (response) {
                 const items = response.items;
-                console.log(items, "ITEM")
                 const itemSelect = $('#item');
                 itemSelect.empty();
 
                 // Add new options
                 items.forEach(function (item) {
-
                     itemSelect.append(new Option(item.name, item.id));
                 });
 

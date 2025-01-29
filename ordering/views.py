@@ -235,7 +235,7 @@ def edit_order(request, order_id):
     
 @login_required
 def filter_items(request, category):
-    print(category)
+
     items = Item.objects.filter(category__id=category)
     items_data = [{"id": item.id, "name": item.name} for item in items]
 
