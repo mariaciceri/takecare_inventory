@@ -114,7 +114,12 @@ def add_item_to_session(request):
                 item_in_order["quantity"] += quantity
                 break
         else:
-            order_items.append({"item_id": item_id, "name": item.name ,"quantity": quantity})
+            order_items.append(
+                {
+                    "item_id": item_id,
+                    "name": item.name,
+                    "quantity": quantity
+                })
 
         request.session["order_items"] = order_items
 
@@ -122,8 +127,7 @@ def add_item_to_session(request):
             {
                 "success": "Item added to order.",
                 "order_items": order_items
-            }
-            )
+            })
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
 @login_required
@@ -134,7 +138,6 @@ def create_order(request):
             return JsonResponse({"error": "No items to order."}, status=400)
         
         try:
-
             # Create the order
             order = Order(user=request.user)
             order.save()
@@ -165,6 +168,7 @@ def delete_item(request, item_id):
     if request.method == "POST":
         order_items = request.session.get("order_items", [])
 
+        # Remove the item from the order by filtering it out
         order_items = [item for item in order_items if item["item_id"] != item_id]
 
         request.session["order_items"] = order_items
@@ -202,10 +206,28 @@ def update_item_quantity(request, item_id):
             {
                 "success": "Item quantity updated.",
                 "order_items": order_items
-            }
-        )
+            })
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
 @login_required
 def edit_order(request, order_id):
-    pass
+    try:
+        order = get_object_or_404(Order, id=order_id, user=request.user)
+        order_items_db = order.items.all()
+
+        order_items = []
+        for item in order_items_db:
+            order_items.append(
+                {
+                    "item_id": item.item.id,
+                    "name": item.item.name,
+                    "quantity": item.quantity
+                })
+        
+        request.session["order_items"] = order_items
+
+        order.delete()
+
+        return JsonResponse({"success": "Order edited successfully."})
+    except Order.DoesNotExist:
+        return JsonResponse({"error": "Order not found."}, status=404)

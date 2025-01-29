@@ -8,7 +8,7 @@ urlpatterns = [
     path("edit_order/<int:order_id>", views.edit_order, name="edit_order"),
     path("delete_item/<str:item_id>", views.delete_item, name="delete_item"),
     path("orders/", views.order_view, name="order_view"),
-    path("orders/order<int:order_id>/", views.order_items, name="order_items"),
+    path("orders/order<int:order_id>", views.order_items, name="order_items"),
     path("session_items/", views.session_items, name="session_items"),
     path("update_item_quantity/<str:item_id>", views.update_item_quantity, name="update_item_quantity"),
 ]

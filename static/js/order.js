@@ -20,7 +20,7 @@ $(document).ready(function () {
                 console.log('ERROR', error)
             }
         });
-    }
+    };
 
     // Add item to cart
     $(".add-item").click(function (e) {
@@ -155,7 +155,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: "GET",
-            url: "/orders/order" + orderId + "/",
+            url: `/orders/order${orderId}`,
             success: function (response) {
                 $("#order-details").empty();
                 response.order_items.forEach(function (item) {
@@ -166,7 +166,7 @@ $(document).ready(function () {
 
                 const isDisabled = response.status !== 0;
                 $("#order-details").append(
-                    `<button type="button" class="edit-order" ${isDisabled ? 'disabled' : ''}>
+                    `<button type="button" class="edit-order" data-id="${orderId}" ${isDisabled ? 'disabled' : ''}>
                             Edit Order
                         </button>`
                 );
@@ -175,6 +175,24 @@ $(document).ready(function () {
                 console.log('Error fetching order items:', error);
                 $("#order-details").html("<p>Failed to load order items.</p>");
             }
-        })
-    })
+        });
+    });
+
+    // Edit order
+    $("#order-details").on("click", ".edit-order", function (e) {
+        e.preventDefault();
+
+        const orderId = $("a[data-id]").data("id");
+
+        $.ajax({
+            type: "GET",
+            url: `/edit_order/${orderId}`,
+            success: function (response) {
+                window.location.href = "/";
+            },
+            error: function (error) {
+                console.log('Error editing order:', error);
+            }
+        });
+    });
 });
