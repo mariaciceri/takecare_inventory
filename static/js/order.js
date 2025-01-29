@@ -102,6 +102,7 @@ $(document).ready(function () {
             )
         }
 
+        //TO DO fix the console.logs
         $.post(`/update_item_quantity/${itemId}`,
             {
                 csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
@@ -193,6 +194,33 @@ $(document).ready(function () {
             },
             error: function (error) {
                 console.log('Error editing order:', error);
+            }
+        });
+    });
+
+    // Filter items by category
+    $("#category").change(function () {
+        const category = $(this).val();
+
+        $.ajax({
+            type: "GET",
+            url: `/filter_items/${category}`,
+            success: function (response) {
+                const items = response.items;
+                console.log(items, "ITEM")
+                const itemSelect = $('#item');
+                itemSelect.empty();
+
+                // Add new options
+                items.forEach(function (item) {
+
+                    itemSelect.append(new Option(item.name, item.id));
+                });
+
+                $('select').formSelect();
+            },
+            error: function (error) {
+                console.log('Error fetching items:', error);
             }
         });
     });

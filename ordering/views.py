@@ -232,3 +232,11 @@ def edit_order(request, order_id):
         return JsonResponse({"success": "Order edited successfully."})
     except Order.DoesNotExist:
         return JsonResponse({"error": "Order not found."}, status=404)
+    
+@login_required
+def filter_items(request, category):
+    print(category)
+    items = Item.objects.filter(category__id=category)
+    items_data = [{"id": item.id, "name": item.name} for item in items]
+
+    return JsonResponse({"items": items_data})
