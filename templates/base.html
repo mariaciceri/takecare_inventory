@@ -1,0 +1,77 @@
+{% load static %}
+{% url 'order' as home_url %}
+{% url 'order_view' as orders_url %}
+{% url 'account_login' as login_url %}
+{% url 'account_signup' as signup_url %}
+{% url 'account_logout' as logout_url %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>TakeCare</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/order.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+
+{% if user.is_authenticated and user.is_approved %}
+
+<body>
+    <header>
+        <nav>
+            <div class="nav wrapper">
+                <a href="#" class="brand-logo right">TakeCare</a>
+                <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <ul id="nav-mobile" class="left hide-on-med-and-down">
+                    <li><a class="{% if request.path == home_url %}active" aria-current="page{% endif %}"
+                            href="{{ home_url }}">Home</a></li>
+                    <li><a class="{% if request.path == orders_url %}active" aria-current="page{% endif %}"
+                            href="{{ orders_url }}">Orders</a></li>
+                    <li><a class="{% if request.path == logout_url %}active" aria-current="page{% endif %}"
+                            href="{{ logout_url}}">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <ul id="mobile-demo" class="sidenav">
+            <li><a class="{% if request.path == home_url %}active" aria-current="page{% endif %}"
+                    href="{{ home_url }}">Home</a>
+            </li>
+            <li><a class="{% if request.path == orders_url %}active" aria-current="page{% endif %}"
+                    href="{{ orders_url }}">Orders</a></li>
+            <li><a class="{% if request.path == logout_url %}active" aria-current="page{% endif %}"
+                    href="{{ logout_url}}">Logout</a></li>
+        </ul>
+        <p>Hello, {{ user }}</p>
+    </header>
+
+    <main>
+        {% block content %}
+        {{ block.super }}
+        {% endblock %}
+    </main>
+</body>
+
+{% else %}
+
+<body>
+    <nav>
+        <a class="{% if request.path == signup_url %}active" aria-current="page{% endif %}"
+            href="{{ signup_url }}">Register</a>
+        <a class="{% if request.path == login_url %}active" aria-current="page{% endif %}"
+            href="{{ login_url }}">Login</a>
+    </nav>
+    <h1>Welcome to Take care</h1>
+    <p>To use our page you must register and be approved by your menager.</p>
+    <p>If you have register and need to access our website, please contact the responsible person and ask them to
+        authorize you.</p>
+
+</body>
+{% endif %}
+
+</html>
