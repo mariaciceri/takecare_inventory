@@ -49,9 +49,11 @@ def order_items(request, order_id):
             for item in order_items
         ]
 
-        print("ORDER ITEMS", order_items_list)
-
-        return JsonResponse({"order_items": order_items_list})
+        return JsonResponse(
+            {
+                "order_items": order_items_list,
+                "status": order.status
+            })
     except Order.DoesNotExist:
         return JsonResponse({"error": "Order not found."}, status=404)
 

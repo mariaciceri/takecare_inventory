@@ -162,7 +162,14 @@ $(document).ready(function () {
                     $("#order-details").prepend(
                         `<li>${item.name} - ${item.quantity}</li>`
                     )
-                })
+                });
+
+                const isDisabled = response.status !== 0;
+                $("#order-details").append(
+                    `<button type="button" class="edit-order" ${isDisabled ? 'disabled' : ''}>
+                            Edit Order
+                        </button>`
+                );
             },
             error: function (error) {
                 console.log('Error fetching order items:', error);
