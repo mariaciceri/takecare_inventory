@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     if (window.location.pathname === "/") {
         // Populate with session items
         $.ajax({
@@ -9,7 +8,8 @@ $(document).ready(function () {
                 $("#item-list").empty();
                 response.order_items.forEach(item => {
                     $("#item-list").prepend(
-                        `<li data-id="${item.item_id}">${item.name} - <input type="number" value="${item.quantity}" min="1" class="item-quantity-adjust">
+                        `<li data-id="${item.item_id}">${item.name} - <input type="number" value="${item.quantity}"
+                        min="1" class="item-quantity-adjust">
                         <button class="remove-item" data-item_id="${item.item_id}">&times;</button>
                         </li>
                         `
@@ -43,7 +43,8 @@ $(document).ready(function () {
 
                 response.order_items.forEach(item => {
                     $("#item-list").prepend(
-                        `<li data-id="${item.item_id}">${item.name} - <input type="number" value="${item.quantity}" min="1" class="item-quantity-adjust">
+                        `<li data-id="${item.item_id}">${item.name} - <input type="number" value="${item.quantity}"
+                        min="1" class="item-quantity-adjust">
                         <button class="remove-item" data-item_id="${item.item_id}">&times;</button>
                         </li>
                         `
@@ -195,4 +196,9 @@ $(document).ready(function () {
             }
         });
     });
+
+    // Materialize CSS
+    $('.sidenav').sidenav();
+
+    $('select').formSelect();
 });
