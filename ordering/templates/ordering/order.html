@@ -1,18 +1,30 @@
+{% extends "base.html" %}
 {% load static %}
-{% url 'account_logout' as logout_url %}
 
-{% if user.is_authenticated and user.is_approved %}
-
-<a href="orders/">Orders</a>
+{% block content %}
 
 <form method="post" id="order-form" action="{% url 'create_order' %}">
     {% csrf_token %}
-    <select name="item" id="item">
-        {% for item in items %}
-        <option value="{{ item.id }}">{{ item.name }}</option>
-        {% endfor %}
-    </select>
-    <input type="number" name="item-quantity" id="item-quantity" min="1">
+    <div class="row">
+        <div class="input-field col s12 m4">
+            <select name="category" id="category">
+                <option value="" disabled selected>Choose your option</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="input-field col s12 m4">
+            <select name="item" id="item">
+                {% for item in items %}
+                <option value="{{ item.id }}">{{ item.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="input-field col s12 m4">
+            <input type="number" name="item-quantity" id="item-quantity" min="1" placeholder="Quantity">
+        </div>
+    </div>
     <button type="button" class="add-item" data-action="{% url 'add_item_to_session' %}">Add</button>
     <button type="submit" class="submit-order">Order</button>
 </form>
@@ -25,19 +37,4 @@
     </ul>
 </div>
 
-
-
-
-
-
-{% else %}
-YOUVE FAILED THE TEST
-{% endif %}
-
-
-
-<a class="nav-link {% if request.path == logout_url %}active" aria-current="page{% endif %}"
-    href="{{ logout_url}}">Logout</a>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{% static 'js/order.js' %}"></script>
+{% endblock %}

@@ -1,11 +1,7 @@
+{% extends "base.html" %}
 {% load static %}
 
-
-
-{% if user.is_authenticated and user.is_approved %}
-
-<a href="/">Home page</a>
-
+{% block content %}
 
 {% for order in orders %}
 <ul>
@@ -18,12 +14,5 @@
 <div>
     <ul id="order-details">
     </ul>
-
 </div>
-
-{% else %}
-YOUVE FAILED THE TEST
-{% endif %}
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{% static 'js/order.js' %}"></script>
+{% endblock %}
