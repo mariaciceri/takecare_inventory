@@ -168,9 +168,8 @@ def create_order(request):
 def delete_item(request, item_id):
     if request.method == "POST":
         order_items = request.session.get("order_items", [])
-
         # Remove the item from the order by filtering it out
-        order_items = [item for item in order_items if item["item_id"] != item_id]
+        order_items = [item for item in order_items if str(item["item_id"]) != item_id]
 
         request.session["order_items"] = order_items
         return JsonResponse(
@@ -198,7 +197,8 @@ def update_item_quantity(request, item_id):
             )
         
         for item in order_items:
-            if item["item_id"] == item_id:
+            if str(item["item_id"]) == item_id:
+                print(item, item_id, "ITEM and ID INSIDE")
                 item["quantity"] = int(quantity)
                 break
 
