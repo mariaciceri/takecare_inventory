@@ -1,20 +1,52 @@
 $(document).ready(function () {
+
+    function renderItems(items) {
+        if (items.length === 0) {
+            $(".item-list-title").text("No items in cart");
+            return;
+        }
+        else {
+            $(".item-list-title").text("Items in cart");
+        }
+        $("#item-list").empty();
+        items.forEach(item => {
+            $("#item-list").prepend(
+                `<li data-id="${item.item_id}">${item.name} 
+                        <input type="number" value="${item.quantity}"
+                        min="1" class="item-quantity-adjust">
+                        <button class="remove-item waves-effect waves-light btn-small blue-grey tooltipped" data-item_id="${item.item_id}" data-tooltip="Delete this item from order">
+                            &times;
+                        </button>
+                        </li>
+                        `
+            )
+        });
+        $('.tooltipped').tooltip({
+            enterDelay: 1000,
+            margin: 0,
+        });
+    }
+
+    function messageDisplay(message) {
+
+        $("#message").fadeOut("fast", function () {
+            $(this).html(message).fadeIn("slow");
+        });
+
+        setTimeout(() => {
+            $("#message").fadeOut("slow", function () {
+                $(this).empty();
+            })
+        }, 1500);
+    }
+
     if (window.location.pathname === "/") {
         // Populate with session items
         $.ajax({
             type: "GET",
             url: "session_items",
             success: function (response) {
-                $("#item-list").empty();
-                response.order_items.forEach(item => {
-                    $("#item-list").prepend(
-                        `<li data-id="${item.item_id}">${item.name} - <input type="number" value="${item.quantity}"
-                        min="1" class="item-quantity-adjust">
-                        <button class="remove-item waves-effect waves-light btn-small" data-item_id="${item.item_id}">&times;</button>
-                        </li>
-                        `
-                    )
-                });
+                renderItems(response.order_items);
             },
             error: function (error) {
                 console.log('ERROR', error)
@@ -34,29 +66,11 @@ $(document).ready(function () {
             url: formAction,
             data: form.serialize(),
             success: function (response) {
-                $("#message").html(
-                    `<div class="success" role="alert">
-                    ${response.success}
-                    </div>`
-                );
-                $("#item-list").empty();
-
-                response.order_items.forEach(item => {
-                    $("#item-list").prepend(
-                        `<li data-id="${item.item_id}">${item.name} - <input type="number" value="${item.quantity}"
-                        min="1" class="item-quantity-adjust">
-                        <button class="remove-item waves-effect waves-light btn-small" data-item_id="${item.item_id}">&times;</button>
-                        </li>
-                        `
-                    )
-                });
+                messageDisplay(response.success);
+                renderItems(response.order_items);
             },
             error: function (error) {
-                $("#message").html(
-                    `<div class="error" role="alert">
-                    ${error.responseJSON.message}
-                    </div>`
-                )
+                messageDisplay(error.responseJSON.error);
             }
         });
     });
@@ -73,12 +87,18 @@ $(document).ready(function () {
             },
             function (response) {
                 if (response.success) {
-                    $(`li[data-id="${itemId}"]`).remove();
+                    messageDisplay(response.success);
+                    $(`li[data-id="${itemId}"]`).slideUp("slow", function () {
+                        $(this).remove();
+                    });
+                    if (response.order_items.length === 0) {
+                        $(".item-list-title").text("No items in cart");
+                    }
                 }
             },
             "json"
-        )
-    })
+        );
+    });
 
     // Update item quantity in cart
     $("#item-list").on("change", ".item-quantity-adjust", function (e) {
@@ -99,8 +119,8 @@ $(document).ready(function () {
                     }
                 },
                 "json"
-            )
-        }
+            );
+        };
 
         //TO DO fix the console.logs
         $.post(`/update_item_quantity/${itemId}`,
@@ -117,7 +137,7 @@ $(document).ready(function () {
                 }
             },
             "json"
-        )
+        );
     });
 
     // Place an order
@@ -132,21 +152,14 @@ $(document).ready(function () {
             url: formAction,
             data: form.serialize(),
             success: function (response) {
-                $("#message").html(
-                    `<div class="success" role="alert">
-                    ${response.success}
-                    </div>`
-                );
+                messageDisplay(response.success);
+                $(".item-list-title").text("No items in cart");
                 $("#item-list").empty();
             },
             error: function (error) {
-                $("#message").html(
-                    `<div class="error" role="alert">
-                    ${error.responseJSON.error}
-                    </div>`
-                )
+                messageDisplay(error.responseJSON.error);
             }
-        })
+        });
     });
 
     // Display items in past orders
@@ -154,28 +167,46 @@ $(document).ready(function () {
         e.preventDefault();
 
         let orderId = $(this).data("id");
+        let orderDetails = $(this).closest("li").find("#order-details");
 
         $.ajax({
             type: "GET",
             url: `/orders/order${orderId}`,
             success: function (response) {
-                $("#order-details").empty();
+                orderDetails.empty();
                 response.order_items.forEach(function (item) {
-                    $("#order-details").prepend(
-                        `<li>${item.name} - ${item.quantity}</li>`
-                    )
+                    orderDetails.prepend(
+                        `<li>
+                        <p>${item.name}</p>
+                        <p class="item-quantity">${item.quantity}</p>
+                        </li>`
+                    );
                 });
+                orderDetails.prepend(
+                    `<li>
+                        <p><strong>Name</strong></p>
+                        <p class="item-quantity"><strong>Quantity</strong></p>
+                        </li><hr>`
+                );
 
                 const isDisabled = response.status !== 0;
-                $("#order-details").append(
-                    `<button type="button" class="edit-order ${isDisabled ? 'btn-flat disabled' : 'waves-effect waves-light btn-small'}" data-id="${orderId}">
+                orderDetails.append(
+                    `<button type="button" class="edit-order 
+                    ${isDisabled ? 'btn-flat disabled' : 'waves-effect waves-light btn-small blue-grey'} tooltipped"
+                    data-id="${orderId}" data-tooltip="Edit this order">
                             Edit Order
-                        </button>`
+                    </button>`
                 );
+
+                $('.tooltipped').tooltip({
+                    enterDelay: 1000,
+                    margin: 0,
+                });
+                orderDetails.slideToggle();
             },
             error: function (error) {
                 console.log('Error fetching order items:', error);
-                $("#order-details").html("<p>Failed to load order items.</p>");
+                orderDetails.html("<p>Failed to load order items.</p>");
             }
         });
     });
@@ -227,4 +258,11 @@ $(document).ready(function () {
     $('.sidenav').sidenav();
 
     $('select').formSelect();
+
+    $(document).ready(function () {
+        $('.tooltipped').tooltip({
+            enterDelay: 1000,
+            margin: 0,
+        });
+    });
 });

@@ -1,0 +1,122 @@
+/* General styling */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* base.html */
+.greeting {
+    text-align: end;
+    padding: 0 10px;
+}
+
+/* order.html */
+/* Buttons */
+.order-buttons {
+    margin-left: 20px;
+}
+
+.order-buttons button {
+    margin: 0 10px;
+}
+
+/* Item list display */
+.item-display {
+    margin: 0 20px 50px;
+}
+
+.item-quantity-adjust{
+    max-width: 75px;
+    text-align: end;
+    justify-self: center;
+}
+
+.item-list-title {
+    font-size: x-large;
+    margin: 30px 0;
+}
+
+li {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+    font-size: large;
+    align-items: center;
+}
+
+li button {
+    max-width: fit-content;
+    justify-self: end;
+}
+
+/* Messages */ 
+#message {
+    text-align: end;
+    padding: 5px 0;
+}
+
+/* Form */
+form {
+    margin-top: 50px;
+}
+
+/* order_list.html */
+.order-list  {
+    margin: 20px;
+}
+
+.order-in-list {
+    margin: 0 20px;
+    color: black;
+    text-decoration: underline;
+}
+
+.order-list>li {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.order-list>li>p {
+    margin-left: auto;
+}
+
+/* Order details display */
+#order-details {
+    display: none;
+    margin: 20px 0;
+}
+
+#order-details>li {
+    display: flex;
+    justify-content: space-between;
+}
+
+£order-details>li>p {
+    margin: 0;
+}
+
+.item-quantity {
+    text-align: end;
+    margin-left: auto;
+}
+
+.order-details-div {
+    padding: 0 20px;
+    width: 100%;
+}
+
+.edit-order {
+    margin-top: 20px;
+}
+
+/* Order status */
+.approved {
+    color: rgb(10, 125, 10);
+}
+
+.rejected {
+    color: rgb(152, 14, 14);
+}
+

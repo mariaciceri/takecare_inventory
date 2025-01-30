@@ -198,7 +198,6 @@ def update_item_quantity(request, item_id):
         
         for item in order_items:
             if str(item["item_id"]) == item_id:
-                print(item, item_id, "ITEM and ID INSIDE")
                 item["quantity"] = int(quantity)
                 break
 

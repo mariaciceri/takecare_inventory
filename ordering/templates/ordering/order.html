@@ -25,16 +25,19 @@
             <input type="number" name="item-quantity" id="item-quantity" min="1" placeholder="Quantity">
         </div>
     </div>
-    <button type="button" class="add-item waves-effect waves-light btn-small"
-        data-action="{% url 'add_item_to_session' %}">Add</button>
-    <button type="submit" class="submit-order waves-effect waves-light btn-small">
-        Order<i class="material-icons right">send</i></button>
+    <div class="order-buttons">
+        <button type="button" class="add-item waves-effect waves-light btn-small blue-grey tooltipped"
+            data-action="{% url 'add_item_to_session' %}" data-tooltip="Add item to order">Add</button>
+        <button type="submit" class="submit-order waves-effect waves-light btn-small blue-grey tooltipped"
+            data-tooltip="Place an order">
+            Order<i class="material-icons right">send</i></button>
+    </div>
 </form>
 <div id="message"></div>
 
 <!-- must add if statement -->
 <div class="item-display">
-    <h2>Items</h2>
+    <h2 class="item-list-title"></h2>
     <ul id="item-list">
     </ul>
 </div>

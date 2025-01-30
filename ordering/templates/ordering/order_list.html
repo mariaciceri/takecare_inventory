@@ -4,15 +4,17 @@
 {% block content %}
 
 {% for order in orders %}
-<ul>
+<ul class="order-list">
     <li>
-        <a href="#" data-id="{{ order.id }}" id="order-{{ order.id }}">Order: {{ order.id }}</a>
-        {{ order.get_status_display }}
+        <a href="#" data-id="{{ order.id }}" id="order-{{ order.id }}" class="order-in-list">Order: {{ order.id }}</a>
+        <p class="{% if order.status == 1 %}approved{% elif order.status == 2 %}rejected{% else %}pending{% endif %}">
+            {{ order.get_status_display }}</p>
+        <div class="order-details-div">
+            <ul id="order-details">
+            </ul>
+        </div>
     </li>
 </ul>
 {% endfor %}
-<div>
-    <ul id="order-details">
-    </ul>
-</div>
+
 {% endblock %}
