@@ -93,7 +93,7 @@ form {
     justify-content: space-between;
 }
 
-£order-details>li>p {
+#order-details>li>p {
     margin: 0;
 }
 
@@ -120,3 +120,49 @@ form {
     color: rgb(152, 14, 14);
 }
 
+/* Login, signup and logout page */
+.account-body {
+    background: url(../images/background.jpg) no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.login-page,
+.signup-page,
+.signout-page,
+.password-reset-page {
+    margin: 0 2rem;
+    padding: 0 1rem;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: rgb(245, 245, 245);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    width: 400px;
+}
+
+.login {
+    margin: 5rem 0;
+}
+
+.signin-title {
+    margin: 0;
+    padding: 2rem 0;
+}
+
+.signup .row {
+    margin: 0;
+}
+
+.signup-page {
+    min-height: min-content;
+}
+
+.signup,
+.signout {
+    margin-bottom: 3rem;
+}
