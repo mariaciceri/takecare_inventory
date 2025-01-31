@@ -163,6 +163,12 @@ form {
 }
 
 .signup,
-.signout {
+.signout,
+.password-reset {
     margin-bottom: 3rem;
+}
+
+.message-reset {
+    padding: 0 20px;
+    color: rgb(184, 183, 183);
 }
