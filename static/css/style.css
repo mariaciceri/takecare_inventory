@@ -134,8 +134,7 @@ form {
 
 .login-page,
 .signup-page,
-.signout-page,
-.password-reset-page {
+.signout-page {
     margin: 0 2rem;
     padding: 0 1rem;
     border: 1px solid black;
@@ -163,12 +162,35 @@ form {
 }
 
 .signup,
-.signout,
-.password-reset {
+.signout {
     margin-bottom: 3rem;
 }
 
 .message-reset {
     padding: 0 20px;
     color: rgb(184, 183, 183);
+}
+
+/* Not authorized view */
+.not-authorized-body {
+    background: url(../images/background.jpg) no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+    margin: 0;
+}
+
+.not-authorized {
+    text-align: center;
+    background-color: rgb(245, 245, 245);
+    padding: 20px;
+    margin: 40px 20px;
+    border: 1px solid black;
+    border-radius: 8px;
+}
+
+.not-authorized-nav a {
+    margin-left: 20px;
 }

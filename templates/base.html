@@ -50,7 +50,6 @@
         </ul>
         <p class="greeting">Hello, {{ user }}</p>
     </header>
-
     <main>
         {% block content %}
         {{ block.super }}
@@ -61,17 +60,21 @@
 {% else %}
 
 <body>
-    <nav>
-        <a class="{% if request.path == signup_url %}active" aria-current="page{% endif %}"
-            href="{{ signup_url }}">Register</a>
-        <a class="{% if request.path == login_url %}active" aria-current="page{% endif %}"
-            href="{{ login_url }}">Login</a>
+    <nav class="blue-grey lighten-1">
+        <div class="not-authorized-nav">
+            <a href="{{ home_url }}" class="brand-logo right">TakeCare</a>
+            <a class="{% if request.path == logout_url %}active" aria-current="page{% endif %}" href="{{ logout_url}}">Logout</a>
+        </div>
     </nav>
-    <h1>Welcome to Take care</h1>
-    <p>To use our page you must register and be approved by your menager.</p>
-    <p>If you have register and need to access our website, please contact the responsible person and ask them to
-        authorize you.</p>
-
+    <div class="not-authorized-body">
+        <div class="not-authorized">
+            <h1>Welcome to TakeCare</h1>
+            <p>To use our page you must register and be approved by your menager.</p>
+            <p>If you have register and need to access our website, please contact the responsible person to
+                authorize you.
+            </p>
+        </div>
+    </div>
 </body>
 {% endif %}
 
