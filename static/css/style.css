@@ -11,6 +11,28 @@
     padding: 0 10px;
 }
 
+/* Authorized user home/orders basic view */
+.authorized-body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.authorized-nav,
+footer {
+    background: url(../images/background.jpg) no-repeat center center fixed;
+    background-size: cover;
+}
+
+#brand-logo-color, 
+.sidenav-trigger {
+    color: black;
+}
+
 /* order.html */
 /* Buttons */
 .order-buttons {
@@ -130,6 +152,24 @@ form {
     align-items: center;
     height: 100vh;
     margin: 0;
+}
+
+nav {
+    background-color: rgba(36, 48, 54, 0.6);
+}
+
+.header-wrapper {
+    width: 100%;
+}
+
+.header-title {
+    text-align: start;
+    padding: 0 20px;
+    background-color: rgba(36, 48, 54, 0.6);
+    width: fit-content;
+    color: #fff;
+    font-size: xx-large;
+    border-radius: 5px;
 }
 
 .login-page,
