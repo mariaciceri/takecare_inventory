@@ -8,6 +8,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block head_title %}{% endblock head_title %}</title>
   {% block extra_head %}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="{% static 'js/order.js' %}"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   {% endblock extra_head %}
@@ -15,7 +17,9 @@
 
 <body class="account-body">
   {% block body %}
-
+  <div class="header-wrapper">
+    <p class="header-title">TakeCare</p>
+  </div>
 
   {% block content %}
   {% endblock content %}
