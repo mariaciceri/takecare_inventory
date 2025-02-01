@@ -21,11 +21,11 @@
 
 {% if user.is_authenticated and user.is_approved %}
 
-<body>
+<body class="authorized-body">
     <header>
-        <nav class="blue-grey lighten-1">
+        <nav class="authorized-nav">
             <div class="nav wrapper">
-                <a href="{{ home_url }}" class="brand-logo right">TakeCare</a>
+                <a href="{{ home_url }}" class="brand-logo right" id="brand-logo-color">TakeCare</a>
                 <a href="{{ home_url }}" data-target="mobile-demo" class="sidenav-trigger"><i
                         class="material-icons">menu</i></a>
                 <ul id="nav-mobile" class="left hide-on-med-and-down">
@@ -55,6 +55,13 @@
         {{ block.super }}
         {% endblock %}
     </main>
+    <footer class="page-footer">
+        <div class="footer-copyright">
+            <div class="container">
+                © 2025 Copyright TakeCare All Rights Reserved
+            </div>
+        </div>
+    </footer>
 </body>
 
 {% else %}
