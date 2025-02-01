@@ -11,6 +11,10 @@
     padding: 0 10px;
 }
 
+.active {
+    color: rgb(36, 48, 54);
+}
+
 /* Authorized user home/orders basic view */
 .authorized-body {
     display: flex;
@@ -59,7 +63,7 @@ footer {
     margin: 30px 0;
 }
 
-li {
+#item-list > li {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     width: 100%;
@@ -67,7 +71,7 @@ li {
     align-items: center;
 }
 
-li button {
+#item-list > li button {
     max-width: fit-content;
     justify-self: end;
 }
@@ -133,6 +137,11 @@ form {
     margin-top: 20px;
 }
 
+.orders-title {
+    margin: 20px;
+    font-size: xx-large;
+}
+
 /* Order status */
 .approved {
     color: rgb(10, 125, 10);
@@ -156,6 +165,11 @@ form {
 
 nav {
     background-color: rgba(36, 48, 54, 0.6);
+}
+
+.login-error {
+    color: red;
+    font-size: smaller;
 }
 
 .header-wrapper {
@@ -233,4 +247,13 @@ nav {
 
 .not-authorized-nav a {
     margin-left: 20px;
+}
+
+/* Media queries */
+@media screen and (min-width: 768px) {
+    main {
+        width: 1000px;
+        margin-right: auto;
+        margin-left: auto;
+    }
 }

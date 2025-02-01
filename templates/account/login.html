@@ -14,7 +14,15 @@
     <a href="{{ signup_url }}">sign up</a> for one first.{% endblocktrans %}
   </p>
 
+  
   <form class="login col s12" method="POST" action="{% url 'account_login' %}">
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger">
+      {% for error in form.non_field_errors %}
+      <p class="login-error">{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
     {% csrf_token %}
     <div class="row">
       <div class="input-field col s10">
@@ -38,8 +46,7 @@
     {% if redirect_field_value %}
     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
     {% endif %}
-
-    <a class="btn-flat secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+    <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
     <button class="btn waves-effect waves-light primaryAction" type="submit">{% trans "Sign In" %}</button>
   </form>
 </div>

@@ -259,10 +259,9 @@ $(document).ready(function () {
 
     $('select').formSelect();
 
-    $(document).ready(function () {
-        $('.tooltipped').tooltip({
-            enterDelay: 1000,
-            margin: 0,
-        });
+    $('.tooltipped').tooltip({
+        enterDelay: 1000,
+        margin: 0,
     });
+
 });

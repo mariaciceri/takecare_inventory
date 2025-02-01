@@ -33,7 +33,7 @@
                             href="{{ home_url }}">Home</a></li>
                     <li><a class="{% if request.path == orders_url %}active" aria-current="page{% endif %}"
                             href="{{ orders_url }}">Orders</a></li>
-                    <li><a class="{% if request.path == logout_url %}active" aria-current="page{% endif %}"
+                    <li><a aria-current="page"
                             href="{{ logout_url}}">Logout</a></li>
                 </ul>
             </div>
@@ -45,7 +45,7 @@
             </li>
             <li><a class="{% if request.path == orders_url %}active" aria-current="page{% endif %}"
                     href="{{ orders_url }}">Orders</a></li>
-            <li><a class="{% if request.path == logout_url %}active" aria-current="page{% endif %}"
+            <li><a aria-current="page"
                     href="{{ logout_url}}">Logout</a></li>
         </ul>
         <p class="greeting">Hello, {{ user }}</p>
@@ -82,6 +82,7 @@
             </p>
         </div>
     </div>
+   
 </body>
 {% endif %}
 
