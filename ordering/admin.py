@@ -118,10 +118,15 @@ class ItemAdmin(admin.ModelAdmin):
         """
         Adds a 'Low Stock' warning for items with quantity below 100.
         """
-        if obj.quantity_in_stock < 100:
+        if obj.quantity_in_stock == 0:
             return format_html(
-                '<span style="color: red; font-weight: bold;">Low Stock</span>'
+                '<span style="color: red; font-weight: bold;">Out of Stock</span>'
                 )
+        elif obj.quantity_in_stock < 100:
+            return format_html(
+                '<span style="color: orange; font-weight: bold;">Low Stock</span>'
+                )
+        
         return ""
     
     def close_exp_date(self, obj):
@@ -140,22 +145,38 @@ class ItemAdmin(admin.ModelAdmin):
 
     def has_module_permission(self, request):
         """
-        Check for items expiring within 30 days
+        Check for items expiring within 30 days, expired items, and low in stock
         """
         expiring_items = Item.objects.filter(
             expiration_date__lte=datetime.date.today() + datetime.timedelta(days=30),
             expiration_date__gt=datetime.date.today())
         expired_items = Item.objects.filter(expiration_date__lte=datetime.date.today())
-        
+        low_in_stock = Item.objects.filter(quantity_in_stock__lt=100)
+        not_in_stock = Item.objects.filter(quantity_in_stock=0)
+
         if expiring_items.exists():
-            message = f"{expiring_items.count()} items are close to expiration!"
+            message = f"{expiring_items.count()} item(s) are close to expiration!"
         
             storage = messages.get_messages(request)
             if message not in [msg.message for msg in storage]:
                 self.message_user(request, message, level=messages.WARNING)
 
         if expired_items.exists():
-            message = f"{expired_items.count()} items have expired!"
+            message = f"{expired_items.count()} item(s) have expired!"
+        
+            storage = messages.get_messages(request)
+            if message not in [msg.message for msg in storage]:
+                self.message_user(request, message, level=messages.ERROR)
+
+        if low_in_stock.exists():
+            message = f"{low_in_stock.count()} item(s) are low in stock!"
+        
+            storage = messages.get_messages(request)
+            if message not in [msg.message for msg in storage]:
+                self.message_user(request, message, level=messages.WARNING)
+
+        if not_in_stock.exists():
+            message = f"{not_in_stock.count()} item(s) are out of stock!"
         
             storage = messages.get_messages(request)
             if message not in [msg.message for msg in storage]:
