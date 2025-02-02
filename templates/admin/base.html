@@ -35,7 +35,6 @@
   <a href="#content-start" class="skip-to-content-link">{% translate 'Skip to main content' %}</a>
   <!-- Container -->
   <div id="container">
-
     {% if not is_popup %}
     <!-- Header -->
     {% block header %}
@@ -95,14 +94,6 @@
       {% endblock %}
       {% endif %}
       <main id="content-start" class="content" tabindex="-1">
-        {% block messages %}
-        {% if messages %}
-        <ul class="messagelist">{% for message in messages %}
-          <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message|capfirst }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endblock messages %}
         <!-- Content -->
         <div id="content" class="{% block coltype %}colM{% endblock %}">
           {% block pretitle %}{% endblock %}
