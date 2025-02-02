@@ -1,0 +1,259 @@
+/* General styling */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* base.html */
+.greeting {
+    text-align: end;
+    padding: 0 10px;
+}
+
+.active {
+    color: rgb(36, 48, 54);
+}
+
+/* Authorized user home/orders basic view */
+.authorized-body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.authorized-nav,
+footer {
+    background: url(../images/background.jpg) no-repeat center center fixed;
+    background-size: cover;
+}
+
+#brand-logo-color, 
+.sidenav-trigger {
+    color: black;
+}
+
+/* order.html */
+/* Buttons */
+.order-buttons {
+    margin-left: 20px;
+}
+
+.order-buttons button {
+    margin: 0 10px;
+}
+
+/* Item list display */
+.item-display {
+    margin: 0 20px 50px;
+}
+
+.item-quantity-adjust{
+    max-width: 75px;
+    text-align: end;
+    justify-self: center;
+}
+
+.item-list-title {
+    font-size: x-large;
+    margin: 30px 0;
+}
+
+#item-list > li {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+    font-size: large;
+    align-items: center;
+}
+
+#item-list > li button {
+    max-width: fit-content;
+    justify-self: end;
+}
+
+/* Messages */ 
+#message {
+    text-align: end;
+    padding: 5px 0;
+}
+
+/* Form */
+form {
+    margin-top: 50px;
+}
+
+/* order_list.html */
+.order-list  {
+    margin: 20px;
+}
+
+.order-in-list {
+    margin: 0 20px;
+    color: black;
+    text-decoration: underline;
+}
+
+.order-list>li {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.order-list>li>p {
+    margin-left: auto;
+}
+
+/* Order details display */
+#order-details {
+    display: none;
+    margin: 20px 0;
+}
+
+#order-details>li {
+    display: flex;
+    justify-content: space-between;
+}
+
+#order-details>li>p {
+    margin: 0;
+}
+
+.item-quantity {
+    text-align: end;
+    margin-left: auto;
+}
+
+.order-details-div {
+    padding: 0 20px;
+    width: 100%;
+}
+
+.edit-order {
+    margin-top: 20px;
+}
+
+.orders-title {
+    margin: 20px;
+    font-size: xx-large;
+}
+
+/* Order status */
+.approved {
+    color: rgb(10, 125, 10);
+}
+
+.rejected {
+    color: rgb(152, 14, 14);
+}
+
+/* Login, signup and logout page */
+.account-body {
+    background: url(../images/background.jpg) no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+nav {
+    background-color: rgba(36, 48, 54, 0.6);
+}
+
+.login-error {
+    color: red;
+    font-size: smaller;
+}
+
+.header-wrapper {
+    width: 100%;
+}
+
+.header-title {
+    text-align: start;
+    padding: 0 20px;
+    background-color: rgba(36, 48, 54, 0.6);
+    width: fit-content;
+    color: #fff;
+    font-size: xx-large;
+    border-radius: 5px;
+}
+
+.login-page,
+.signup-page,
+.signout-page {
+    margin: 0 2rem;
+    padding: 0 1rem;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: rgb(245, 245, 245);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    width: 400px;
+}
+
+.login {
+    margin: 5rem 0;
+}
+
+.signin-title {
+    margin: 0;
+    padding: 2rem 0;
+}
+
+.signup .row {
+    margin: 0;
+}
+
+.signup-page {
+    min-height: min-content;
+}
+
+.signup,
+.signout {
+    margin-bottom: 3rem;
+}
+
+.message-reset {
+    padding: 0 20px;
+    color: rgb(184, 183, 183);
+}
+
+/* Not authorized view */
+.not-authorized-body {
+    background: url(../images/background.jpg) no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+    margin: 0;
+}
+
+.not-authorized {
+    text-align: center;
+    background-color: rgb(245, 245, 245);
+    padding: 20px;
+    margin: 40px 20px;
+    border: 1px solid black;
+    border-radius: 8px;
+}
+
+.not-authorized-nav a {
+    margin-left: 20px;
+}
+
+/* Media queries */
+@media screen and (min-width: 768px) {
+    main {
+        width: 1000px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
