@@ -1,9 +1,9 @@
 from django.contrib import admin, messages
+from django.http import HttpRequest
 from django.utils.html import format_html
 from .models import CustomUser, Order, Category, Item, OrderItem
 from django.forms import DateInput
 import datetime
-
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
@@ -128,12 +128,40 @@ class ItemAdmin(admin.ModelAdmin):
         """
         Adds a 'Close Expiration Date' warning for items with expiration date
         """
-        if obj.expiration_date < datetime.date.today() + datetime.timedelta(days=30):
+        if obj.expiration_date <= datetime.date.today():
             return format_html(
-                '<span style="color: red; font-weight: bold;">Close Expiration Date</span>'
+                '<span style="color: red; font-weight: bold;">Expired</span>'
+                )
+        elif obj.expiration_date < datetime.date.today() + datetime.timedelta(days=30):
+            return format_html(
+                '<span style="color: orange; font-weight: bold;">Close Expiration Date</span>'
                 )
         return ""
+
+    def has_module_permission(self, request):
+        """
+        Check for items expiring within 30 days
+        """
+        expiring_items = Item.objects.filter(
+            expiration_date__lte=datetime.date.today() + datetime.timedelta(days=30),
+            expiration_date__gt=datetime.date.today())
+        expired_items = Item.objects.filter(expiration_date__lte=datetime.date.today())
         
+        if expiring_items.exists():
+            message = f"{expiring_items.count()} items are close to expiration!"
+        
+            storage = messages.get_messages(request)
+            if message not in [msg.message for msg in storage]:
+                self.message_user(request, message, level=messages.WARNING)
+
+        if expired_items.exists():
+            message = f"{expired_items.count()} items have expired!"
+        
+            storage = messages.get_messages(request)
+            if message not in [msg.message for msg in storage]:
+                self.message_user(request, message, level=messages.ERROR)
+
+        return super().has_module_permission(request)
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
@@ -141,7 +169,20 @@ class CustomUserAdmin(admin.ModelAdmin):
     list_filter = ('is_approved',)
     search_fields = ('username', 'email')
 
-  
+    def has_module_permission(self, request):
+        """
+        Check for unapproved users and display a warning if any are found.
+        """
+        unapproved_users = CustomUser.objects.filter(is_approved=False)
+        if unapproved_users.exists():
+            message = f"{unapproved_users.count()} users are pending approval!"
+        
+            storage = messages.get_messages(request)
+            if message not in [msg.message for msg in storage]:
+                self.message_user(request, message, level=messages.WARNING)
+
+        return super().has_module_permission(request)
+
+
 admin.site.register(Category) 
-admin.site.register(OrderItem)
 admin.site.site_header = 'TakeCare System Administration'
