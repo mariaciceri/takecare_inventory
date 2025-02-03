@@ -9,6 +9,9 @@ import datetime
 STATUS = ((0, "Pending"), (1, "Approved"), (2, "Rejected"))
 
 class CustomUser(AbstractUser):
+    """
+    Add approval to the user model.
+    """
     is_approved = models.BooleanField(default=False)
 
 class Order(models.Model):
