@@ -1,5 +1,4 @@
 from django.contrib import admin, messages
-from django.http import HttpRequest
 from django.utils.html import format_html
 from .models import CustomUser, Order, Category, Item, OrderItem
 from django.forms import DateInput
