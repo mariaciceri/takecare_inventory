@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 from django.forms import modelformset_factory
 from django.http import JsonResponse
 from .models import Order, OrderItem, Item, Category
@@ -12,6 +11,18 @@ OrderItemFormSet = modelformset_factory(
 
 @login_required
 def order(request):
+    """
+    Displays the ordering page.
+
+    ***Context***
+    ``user``
+        The current user.
+    ``items``
+        All items in the database.
+    ``categories``
+        All categories in the database.
+    """
+    
     user = request.user
     items = Item.objects.all()
     categories = Category.objects.all()
@@ -28,6 +39,15 @@ def order(request):
 
 @login_required
 def order_view(request):
+    """ 
+    Displays the sent orders page.
+
+    ***Context***
+    ``user``
+        The current user.
+    ``orders``
+        All orders made by the current user
+    """
     user = request.user
     orders = Order.objects.filter(user=user).order_by("-created_at")
     return render(
@@ -38,6 +58,15 @@ def order_view(request):
 
 @login_required
 def order_items(request, order_id):
+    """ 
+    Retrieves the items in an order to display them.
+
+    ***Context***
+    ``order_items``
+        The items in the order.
+    ``status``
+        The status of the order.
+    """
     try:
         order = Order.objects.get(id=order_id, user=request.user)
         order_items = order.items.all()
@@ -60,55 +89,79 @@ def order_items(request, order_id):
 
 @login_required
 def session_items(request):
-    try:
-        order_items = request.session.get("order_items", [])
+    """ 
+    Retrieves the items in the session to display them.
+
+    ***Context***
+    ``order_items``
+        The items in the order.
+    """
+    order_items = request.session.get("order_items", [])
+    return JsonResponse(
+        {
+            "success": "Order items retrieved successfully.",
+            "order_items": order_items
+        }
+    )
+
+def check_quantity_validity(quantity, item):
+    """ 
+    Checks if the quantity is valid by checking if it's a positive
+    number and less than or equal to the quantity in stock.
+    """
+    if not quantity or quantity <= 0:
         return JsonResponse(
             {
-                "success": "Order items retrieved successfully.",
-                "order_items": order_items
-            }
-        )
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=400)
+                "error": "Invalid item or quantity.",
+                "message": "The quantity must be a positive number."
+            }, status=400)
+    elif quantity > item.quantity_in_stock:
+        return JsonResponse(
+        {
+            "error": "Insufficient stock.",
+            "message": f"""Only {item.quantity_in_stock} {item.name} 
+available."""
+        }, status=400)
+    else:
+        return None
+    
 
-@csrf_exempt
 @login_required
 def add_item_to_session(request):
+    """ 
+    Adds an item to the session.
+
+    ***Context***
+    ``item_id``
+        The ID of the item to add.
+    ``quantity``
+        The quantity of the item to add.
+    ``item``
+        The item to add.
+    ``order_items``
+        The items in the order.
+    """
     if request.method == "POST":
         item_id = request.POST.get("item")
-        quantity = request.POST.get("item-quantity")
-
-        if not quantity or not quantity.isdigit() or int(quantity) <= 0:
-            return JsonResponse(
-                {
-                    "error": "Invalid item or quantity.",
-                    "message": "The quantity must be a positive number."
-                },
-                status=400
-            )
-
-        quantity = int(quantity)
-        
+        quantity = int(request.POST.get("item-quantity"))
         item = get_object_or_404(Item, id=item_id)
 
-        if quantity > item.quantity_in_stock:
-                return JsonResponse(
-                {
-                    "error": "Insufficient stock.",
-                    "message": f"Only {item.quantity_in_stock} {item.name} available."
-                },
-                status=400
-            )
-            
+        if check_quantity_validity(quantity, item):
+            return check_quantity_validity(quantity, item)
+
         order_items = request.session.get("order_items", [])
 
+        # Check if the item is already in the order
+        # If it is, update the quantity
         for item_in_order in order_items:
             if item_in_order["item_id"] == item_id:
-                if item_in_order["quantity"] + quantity > item.quantity_in_stock:
+                new_quantity = item_in_order["quantity"] + quantity
+                if  new_quantity > item.quantity_in_stock:
                     return JsonResponse(
                         {
                             "error": "Insufficient stock.",
-                            "message": f"Only {item.quantity_in_stock} {item.name} available."
+                            "message": f"""Only 
+{item.quantity_in_stock - item_in_order["quantity"]} {item.name} available."""
                         },
                         status=400
                     )
@@ -133,8 +186,19 @@ def add_item_to_session(request):
 
 @login_required
 def create_order(request):
+    """ 
+    Creates an order from the items in the session.
+
+    ***Context***
+    ``order_items``
+        The items in the order.
+    ``order``
+        The order created.
+    """
     if request.method == "POST":
         order_items = request.session.get("order_items", [])
+        
+        # Check if there are items to order
         if not order_items:
             return JsonResponse({"error": "No items to order."}, status=400)
         
@@ -162,14 +226,23 @@ def create_order(request):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
 
-    return JsonResponse({"error": "Invalid request method."}, status=405)
-
 @login_required
 def delete_item(request, item_id):
+    """ 
+    Deletes an item from the session by filtering it out.
+
+    ***Context***
+    ``order_items``
+        The items in the order.
+    ``item_id``
+        The ID of the item to delete.
+    """
     if request.method == "POST":
         order_items = request.session.get("order_items", [])
-        # Remove the item from the order by filtering it out
-        order_items = [item for item in order_items if str(item["item_id"]) != item_id]
+
+        order_items = (
+        [item for item in order_items if str(item["item_id"]) != item_id]
+        )
 
         request.session["order_items"] = order_items
         return JsonResponse(
@@ -182,19 +255,29 @@ def delete_item(request, item_id):
 
 @login_required
 def update_item_quantity(request, item_id):
+    """ 
+    Update the quantity of an item in the session.
+
+    ***Context***
+    ``quantity``
+        The new quantity of the item.
+    ``quantity_in_stock``
+        The quantity of the item in stock.
+    ``order_items``
+        The items in the order
+    """
     if request.method == "POST":
         quantity = request.POST.get("quantity")
-
+        quantity_in_stock =  Item.objects.get(id=item_id).quantity_in_stock
         order_items = request.session.get("order_items", [])
-
-        if not quantity or not quantity.isdigit() or int(quantity) <= 0:
+        
+        if int(quantity) > int(quantity_in_stock):
             return JsonResponse(
                 {
-                    "error": "Invalid item or quantity.",
-                    "message": "The quantity must be a positive number."
-                },
-                status=400
-            )
+                    "error": "Insufficient stock.",
+                    "message": f"""Only {quantity_in_stock} items available.""",
+                    "max_quantity": quantity_in_stock
+                },status=400)
         
         for item in order_items:
             if str(item["item_id"]) == item_id:
@@ -211,8 +294,17 @@ def update_item_quantity(request, item_id):
 
 @login_required
 def edit_order(request, order_id):
+    """ 
+    Edits an order by deleting the original order and creating a new one.
+
+    ***Context***
+    ``order``
+        The order to edit.
+    ``order_items``
+        The items in the order.
+    """
     try:
-        order = get_object_or_404(Order, id=order_id, user=request.user)
+        order = Order.objects.get(id=order_id, user=request.user)
         order_items_db = order.items.all()
 
         order_items = []
@@ -234,6 +326,15 @@ def edit_order(request, order_id):
     
 @login_required
 def filter_items(request, category):
+    """
+    Filters items by category.
+
+    ***Context***
+    ``items``
+        The items in the category.
+    ``items_data``
+        Prepare the items for JSON response.
+    """
 
     items = Item.objects.filter(category__id=category)
     items_data = [{"id": item.id, "name": item.name} for item in items]
