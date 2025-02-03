@@ -193,8 +193,8 @@ $(document).ready(function () {
                 orderDetails.append(
                     `<button type="button" class="edit-order 
                     ${isDisabled ? 'btn-flat disabled' : 'waves-effect waves-light btn-small blue-grey'} tooltipped"
-                    data-id="${orderId}" data-tooltip="Edit this order">
-                            Edit Order
+                    data-id="${orderId}" data-tooltip="This will delete the order, allowing you to update it. You must resend it after.">
+                            Undo and Edit Order
                     </button>`
                 );
 
