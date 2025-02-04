@@ -55,7 +55,7 @@ $(document).ready(function () {
                 renderItems(response.order_items);
             },
             error: function (error) {
-                console.log('ERROR', error)
+                messageDisplay("Failed to load items. Please try again.");
             }
         });
     };
@@ -115,17 +115,22 @@ $(document).ready(function () {
 
         // Deletes the item if user manually sets quantity to 0 or less
         if (quantity < 1) {
-            $.post(`/delete_item/${itemId}`,
-                {
+            $.ajax({
+                type: "POST",
+                url: `/delete_item/${itemId}`,
+                data:{
                     csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
                 },
-                function (response) {
-                    if (response.success) {
-                        $(`li[data-id="${itemId}"]`).remove();
-                    }
+                success: function (response) {
+                    messageDisplay(response.success);
+                    $(`li[data-id="${itemId}"]`).remove();
                 },
-                "json"
-            );
+                error: function (error) {
+                    messageDisplay(error.responseJSON.message);
+                },
+            });
+
+            return;
         };
 
         $.ajax({
@@ -214,7 +219,6 @@ $(document).ready(function () {
                 orderDetails.slideToggle();
             },
             error: function (error) {
-                console.log('Error fetching order items:', error);
                 orderDetails.html("<p>Failed to load order items.</p>");
             }
         });
@@ -233,7 +237,7 @@ $(document).ready(function () {
                 window.location.href = "/";
             },
             error: function (error) {
-                console.log('Error editing order:', error);
+                $(".error-message").text("Failed to undo order. Please try again.");
             }
         });
     });
@@ -259,7 +263,7 @@ $(document).ready(function () {
                 $('select').formSelect();
             },
             error: function (error) {
-                console.log('Error fetching items:', error);
+                messageDisplay("Failed to filter items. Please try again.");
             }
         });
     });

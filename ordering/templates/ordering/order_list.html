@@ -9,6 +9,7 @@
     <h2 class="orders-title">No past orders</h2>
 {% endif %}
 {% for order in orders %}
+<p class="error-message"></p>
 <ul class="order-list">
     <li>
         <a href="#" data-id="{{ order.id }}" id="order-{{ order.id }}" class="order-in-list">Order: {{ order.id }}</a>

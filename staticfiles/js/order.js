@@ -1,6 +1,9 @@
 $(document).ready(function () {
 
     function renderItems(items) {
+        /**
+        * Display items in the home page
+        */
         if (items.length === 0) {
             $(".item-list-title").text("No items in cart");
             return;
@@ -21,6 +24,7 @@ $(document).ready(function () {
                         `
             )
         });
+        // Initialize tooltips for newly added items delete button
         $('.tooltipped').tooltip({
             enterDelay: 1000,
             margin: 0,
@@ -28,7 +32,9 @@ $(document).ready(function () {
     }
 
     function messageDisplay(message) {
-
+        /**
+        * Display feedback to users after an action
+        */
         $("#message").fadeOut("fast", function () {
             $(this).html(message).fadeIn("slow");
         });
@@ -41,7 +47,7 @@ $(document).ready(function () {
     }
 
     if (window.location.pathname === "/") {
-        // Populate with session items
+        // Populate with items in session
         $.ajax({
             type: "GET",
             url: "session_items",
@@ -49,12 +55,12 @@ $(document).ready(function () {
                 renderItems(response.order_items);
             },
             error: function (error) {
-                console.log('ERROR', error)
+                messageDisplay("Failed to load items. Please try again.");
             }
         });
     };
 
-    // Add item to cart
+    // Add item to session
     $(".add-item").click(function (e) {
         e.preventDefault();
 
@@ -70,12 +76,12 @@ $(document).ready(function () {
                 renderItems(response.order_items);
             },
             error: function (error) {
-                messageDisplay(error.responseJSON.error);
+                messageDisplay(error.responseJSON.message);
             }
         });
     });
 
-    // Remove item from cart
+    // Remove item from session and page
     $("#item-list").on("click", ".remove-item", function (e) {
         e.preventDefault();
 
@@ -100,44 +106,50 @@ $(document).ready(function () {
         );
     });
 
-    // Update item quantity in cart
+    // Update item quantity
     $("#item-list").on("change", ".item-quantity-adjust", function (e) {
         e.preventDefault();
 
         let itemId = $(this).parent().attr("data-id");
         let quantity = $(this).val();
 
-        // TODO : make it a nice transition
+        // Deletes the item if user manually sets quantity to 0 or less
         if (quantity < 1) {
-            $.post(`/delete_item/${itemId}`,
-                {
+            $.ajax({
+                type: "POST",
+                url: `/delete_item/${itemId}`,
+                data:{
                     csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
                 },
-                function (response) {
-                    if (response.success) {
-                        $(`li[data-id="${itemId}"]`).remove();
-                    }
+                success: function (response) {
+                    messageDisplay(response.success);
+                    $(`li[data-id="${itemId}"]`).remove();
                 },
-                "json"
-            );
+                error: function (error) {
+                    messageDisplay(error.responseJSON.message);
+                },
+            });
+
+            return;
         };
 
-        //TO DO fix the console.logs
-        $.post(`/update_item_quantity/${itemId}`,
-            {
+        $.ajax({
+            type: "POST",
+            url:`/update_item_quantity/${itemId}`,
+            data: {
                 csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
                 quantity: quantity,
             },
-            function (response) {
-                if (response.success) {
-                    console.log("YEAH BABE")
-                }
-                else {
-                    console.log("NOPE")
-                }
+            success: function (response) {
+                messageDisplay(response.success);
             },
-            "json"
-        );
+            error: function (error) {
+                messageDisplay(error.responseJSON.message);
+                if (error.responseJSON.max_quantity) {
+                    $(`li[data-id="${itemId}"] input`).val(error.responseJSON.max_quantity);
+                }
+            }
+        });
     });
 
     // Place an order
@@ -190,6 +202,7 @@ $(document).ready(function () {
                 );
 
                 const isDisabled = response.status !== 0;
+                // Add undo and edit button
                 orderDetails.append(
                     `<button type="button" class="edit-order 
                     ${isDisabled ? 'btn-flat disabled' : 'waves-effect waves-light btn-small blue-grey'} tooltipped"
@@ -198,6 +211,7 @@ $(document).ready(function () {
                     </button>`
                 );
 
+                // Initialize tooltips for newly added items buttons
                 $('.tooltipped').tooltip({
                     enterDelay: 1000,
                     margin: 0,
@@ -205,13 +219,12 @@ $(document).ready(function () {
                 orderDetails.slideToggle();
             },
             error: function (error) {
-                console.log('Error fetching order items:', error);
                 orderDetails.html("<p>Failed to load order items.</p>");
             }
         });
     });
 
-    // Edit order
+    // Undo and Edit order
     $("#order-details").on("click", ".edit-order", function (e) {
         e.preventDefault();
 
@@ -224,7 +237,7 @@ $(document).ready(function () {
                 window.location.href = "/";
             },
             error: function (error) {
-                console.log('Error editing order:', error);
+                $(".error-message").text("Failed to undo order. Please try again.");
             }
         });
     });
@@ -241,20 +254,21 @@ $(document).ready(function () {
                 const itemSelect = $('#item');
                 itemSelect.empty();
 
-                // Add new options
+                // Add filtered options
                 items.forEach(function (item) {
                     itemSelect.append(new Option(item.name, item.id));
                 });
 
+                // Initialize select dropdown
                 $('select').formSelect();
             },
             error: function (error) {
-                console.log('Error fetching items:', error);
+                messageDisplay("Failed to filter items. Please try again.");
             }
         });
     });
 
-    // Materialize CSS
+    // Materialize CSS initializators
     $('.sidenav').sidenav();
 
     $('select').formSelect();
