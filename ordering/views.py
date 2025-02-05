@@ -3,11 +3,6 @@ from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
 from django.http import JsonResponse
 from .models import Order, OrderItem, Item, Category
-from .forms import OrderItemInlineForm
-
-OrderItemFormSet = modelformset_factory(
-    OrderItem, form=OrderItemInlineForm
-)
 
 @login_required
 def order(request):
@@ -22,7 +17,6 @@ def order(request):
     ``categories``
         All categories in the database.
     """
-    
     user = request.user
     items = Item.objects.all()
     categories = Category.objects.all()
@@ -109,7 +103,7 @@ def check_quantity_validity(quantity, item):
     Checks if the quantity is valid by checking if it's a positive
     number and less than or equal to the quantity in stock.
     """
-    if not quantity or quantity <= 0:
+    if not isinstance(quantity, int) or quantity <= 0:
         return JsonResponse(
             {
                 "error": "Invalid item or quantity.",
@@ -143,8 +137,17 @@ def add_item_to_session(request):
     """
     if request.method == "POST":
         item_id = request.POST.get("item")
-        quantity = int(request.POST.get("item-quantity"))
+        quantity_str = request.POST.get("item-quantity")
         item = get_object_or_404(Item, id=item_id)
+
+        if not quantity_str.isdigit():
+            return JsonResponse(
+                {
+                    "error": "Invalid item or quantity.",
+                    "message": "The quantity must be a positive integer."
+                }, status=400)
+
+        quantity = int(quantity_str)
 
         if check_quantity_validity(quantity, item):
             return check_quantity_validity(quantity, item)
@@ -275,7 +278,7 @@ def update_item_quantity(request, item_id):
             return JsonResponse(
                 {
                     "error": "Insufficient stock.",
-                    "message": f"""Only {quantity_in_stock} items available.""",
+                    "message": f"Only {quantity_in_stock} items available.",
                     "max_quantity": quantity_in_stock
                 },status=400)
         
@@ -324,7 +327,6 @@ def edit_order(request, order_id):
     except Order.DoesNotExist:
         return JsonResponse({"error": "Order not found."}, status=404)
     
-@login_required
 def filter_items(request, category):
     """
     Filters items by category.
