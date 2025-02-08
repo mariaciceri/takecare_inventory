@@ -1,10 +1,10 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.forms import modelformset_factory
 from django.http import JsonResponse
 from .models import Order, OrderItem, Item, Category
 
-@login_required
+
+@login_required(login_url='/home/')
 def order(request):
     """
     Displays the ordering page.
@@ -153,11 +153,10 @@ def add_item_to_session(request):
             return check_quantity_validity(quantity, item)
 
         order_items = request.session.get("order_items", [])
-
         # Check if the item is already in the order
         # If it is, update the quantity
         for item_in_order in order_items:
-            if item_in_order["item_id"] == item_id:
+            if str(item_in_order["item_id"]) == item_id:
                 new_quantity = item_in_order["quantity"] + quantity
                 if  new_quantity > item.quantity_in_stock:
                     return JsonResponse(
@@ -179,7 +178,6 @@ def add_item_to_session(request):
                 })
 
         request.session["order_items"] = order_items
-
         return JsonResponse(
             {
                 "success": "Item added to order.",
@@ -200,15 +198,20 @@ def create_order(request):
     """
     if request.method == "POST":
         order_items = request.session.get("order_items", [])
-        
         # Check if there are items to order
         if not order_items:
             return JsonResponse({"error": "No items to order."}, status=400)
         
+        order_id = request.POST.get("order_id")
         try:
-            # Create the order
-            order = Order(user=request.user)
-            order.save()
+            if order_id:
+                # Edit the order
+                order = Order.objects.get(id=order_id, user=request.user)
+                order.items.all().delete()
+            else:
+                # Create the order
+                order = Order(user=request.user)
+                order.save()
 
             # Create the order items
             for item_data in order_items:
@@ -225,7 +228,7 @@ def create_order(request):
             # Clear the session
             del request.session["order_items"]
 
-            return JsonResponse({"success": "Order created successfully."})
+            return JsonResponse({"success": "Order saved successfully."})
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
 
@@ -321,9 +324,23 @@ def edit_order(request, order_id):
         
         request.session["order_items"] = order_items
 
-        order.delete()
-
         return JsonResponse({"success": "Order edited successfully."})
+    except Order.DoesNotExist:
+        return JsonResponse({"error": "Order not found."}, status=404)
+    
+@login_required
+def delete_order(request, order_id):
+    """ 
+    Deletes an order.
+
+    ***Context***
+    ``order``
+        The order to delete.
+    """
+    try:
+        order = Order.objects.get(id=order_id, user=request.user)
+        order.delete()
+        return JsonResponse({"success": "Order deleted successfully."})
     except Order.DoesNotExist:
         return JsonResponse({"error": "Order not found."}, status=404)
     

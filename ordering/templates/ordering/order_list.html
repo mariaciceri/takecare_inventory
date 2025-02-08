@@ -12,15 +12,33 @@
 <p class="error-message"></p>
 <ul class="order-list">
     <li>
-        <a href="#" data-id="{{ order.id }}" id="order-{{ order.id }}" class="order-in-list">Order: {{ order.id }}</a>
-        <p class="{% if order.status == 1 %}approved{% elif order.status == 2 %}rejected{% else %}pending{% endif %}">
-            {{ order.get_status_display }}</p>
+        <a href="#" data-id="{{ order.id }}" id="order-{{ order.id }}" class="order-in-list">
+            Order: {{ order.id }}
+        </a>
+        <p class="{% if order.status == 1 %}approved{% elif order.status == 2 %}rejected{% else %}pending{% endif %} tooltipped order-status" 
+        {% if order.status == 1 %} data-tooltip="Order Approved by your manager. You can't edit or delete this order."{% endif %}
+        {% if order.status == 2 %} data-tooltip="Order Rejected by your manager. You can't edit or delete this order."{% endif %}
+        {% if order.status == 0 %} data-tooltip="Your order was not processed yet. You can edit or delete this order."{% endif %}>
+            {{ order.get_status_display }}
+        </p>
         <div class="order-details-div">
             <ul id="order-details">
             </ul>
         </div>
     </li>
 </ul>
+
+<!-- Modal Structure -->
+<div id="modal1" class="modal">
+    <div class="modal-content">
+        <h4>Are you sure you want to delete this order?</h4>
+        <p>This will permanentely erase your order from the system, making it impossible to retrieve it</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat red confirm-delete" data-id="">Yes</a>
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">No</a>
+    </div>
+</div>
 {% endfor %}
 
 {% endblock %}

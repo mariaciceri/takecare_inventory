@@ -6,6 +6,7 @@ urlpatterns = [
     path("add_item_to_session/", views.add_item_to_session, name="add_item_to_session"),
     path("create_order/", views.create_order, name="create_order"),
     path("edit_order/<str:order_id>", views.edit_order, name="edit_order"),
+    path("delete_order/<str:order_id>", views.delete_order, name="delete_order"),
     path("delete_item/<str:item_id>", views.delete_item, name="delete_item"),
     path("filter_items/<str:category>", views.filter_items, name="filter_items"),
     path("orders/", views.order_view, name="order_view"),
