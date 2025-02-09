@@ -2,32 +2,32 @@
 {% load static %}
 
 {% block content %}
-
-{% if orders %}
-    <h2 class="orders-title">Orders</h2>
-{% else %}
-    <h2 class="orders-title">No past orders</h2>
-{% endif %}
-{% for order in orders %}
-<p class="error-message"></p>
-<ul class="order-list">
-    <li>
-        <a href="#" data-id="{{ order.id }}" id="order-{{ order.id }}" class="order-in-list">
-            Order: {{ order.id }}
-        </a>
-        <p class="{% if order.status == 1 %}approved{% elif order.status == 2 %}rejected{% else %}pending{% endif %} tooltipped order-status" 
-        {% if order.status == 1 %} data-tooltip="Order Approved by your manager. You can't edit or delete this order."{% endif %}
-        {% if order.status == 2 %} data-tooltip="Order Rejected by your manager. You can't edit or delete this order."{% endif %}
-        {% if order.status == 0 %} data-tooltip="Your order was not processed yet. You can edit or delete this order."{% endif %}>
-            {{ order.get_status_display }}
-        </p>
-        <div class="order-details-div">
-            <ul id="order-details">
-            </ul>
-        </div>
-    </li>
-</ul>
-
+<div class="authorized-main">
+    {% if orders %}
+        <h2 class="orders-title">Orders</h2>
+    {% else %}
+        <h2 class="orders-title">No past orders</h2>
+    {% endif %}
+    <ul class="order-list">
+        {% for order in orders %}
+        <li>
+            <a href="#" data-id="{{ order.id }}" id="order-{{ order.id }}" class="order-in-list">
+                Order: {{ order.id }}
+            </a>
+            <p class="{% if order.status == 1 %}approved{% elif order.status == 2 %}rejected{% else %}pending{% endif %} tooltipped order-status" 
+            {% if order.status == 1 %} data-tooltip="Order Approved by your manager. You can't edit or delete this order."{% endif %}
+            {% if order.status == 2 %} data-tooltip="Order Rejected by your manager. You can't edit or delete this order."{% endif %}
+            {% if order.status == 0 %} data-tooltip="Your order was not processed yet. You can edit or delete this order."{% endif %}>
+                {{ order.get_status_display }}
+            </p>
+            <div class="order-details-div">
+                <ul id="order-details">
+                </ul>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 <!-- Modal Structure -->
 <div id="modal1" class="modal">
     <div class="modal-content">
@@ -39,6 +39,5 @@
         <a href="#!" class="modal-close waves-effect waves-green btn-flat">No</a>
     </div>
 </div>
-{% endfor %}
 
 {% endblock %}

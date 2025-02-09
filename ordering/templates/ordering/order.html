@@ -2,44 +2,44 @@
 {% load static %}
 
 {% block content %}
+<div class="authorized-main">
+    <form method="post" id="order-form" action="{% url 'create_order' %}">
+        {% csrf_token %}
+        <div class="row">
+            <div class="input-field col s12 m4">
+                <select name="category" id="category">
+                    <option value="" disabled selected>Choose your option</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="input-field col s12 m4">
+                <select name="item" id="item">
+                    {% for item in items %}
+                    <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="input-field col s12 m4">
+                <input type="number" name="item-quantity" id="item-quantity" min="1" placeholder="Quantity">
+            </div>
+        </div>
+    </form>
+    <button type="button" class="add-item waves-effect waves-light btn-small blue-grey tooltipped"
+        data-action="{% url 'add_item_to_session' %}" data-tooltip="Add item to order">
+        Add
+    </button>
+    <div id="message"></div>
 
-<form method="post" id="order-form" action="{% url 'create_order' %}">
-    {% csrf_token %}
-    <div class="row">
-        <div class="input-field col s12 m4">
-            <select name="category" id="category">
-                <option value="" disabled selected>Choose your option</option>
-                {% for category in categories %}
-                <option value="{{ category.id }}">{{ category.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="input-field col s12 m4">
-            <select name="item" id="item">
-                {% for item in items %}
-                <option value="{{ item.id }}">{{ item.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="input-field col s12 m4">
-            <input type="number" name="item-quantity" id="item-quantity" min="1" placeholder="Quantity">
-        </div>
+    <div class="item-display">
+        <h2 class="item-list-title"></h2>
+        <ul id="item-list">
+        </ul>
     </div>
-</form>
-<button type="button" class="add-item waves-effect waves-light btn-small blue-grey tooltipped"
-    data-action="{% url 'add_item_to_session' %}" data-tooltip="Add item to order">
-    Add
-</button>
-<div id="message"></div>
-
-<div class="item-display">
-    <h2 class="item-list-title"></h2>
-    <ul id="item-list">
-    </ul>
+    <button type="submit" class="submit-order waves-effect waves-light btn-small blue-grey tooltipped"
+        data-tooltip="Save your order">
+        Save<i class="material-icons right">send</i>
+    </button>
 </div>
-<button type="submit" class="submit-order waves-effect waves-light btn-small blue-grey tooltipped"
-    data-tooltip="Save your order">
-    Save<i class="material-icons right">send</i>
-</button>
-
 {% endblock %}

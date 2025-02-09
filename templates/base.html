@@ -23,8 +23,6 @@
     <link rel="icon" type="image/png" sizes="32x32" href="../static/images/pills-32.png">
 </head>
 
-{% if user.is_authenticated and user.is_approved %}
-
 <body class="authorized-body">
     <header>
         <nav class="authorized-nav">
@@ -33,30 +31,67 @@
                 <a href="{{ home_url }}" data-target="mobile-demo" class="sidenav-trigger"><i
                         class="material-icons">menu</i></a>
                 <ul id="nav-mobile" class="left hide-on-med-and-down">
-                    <li><a class="{% if request.path == home_url %}active" aria-current="page{% endif %}"
-                            href="{{ home_url }}">Home</a></li>
-                    <li><a class="{% if request.path == orders_url %}active" aria-current="page{% endif %}"
-                            href="{{ orders_url }}">Orders</a></li>
-                    <li><a aria-current="page"
-                            href="{{ logout_url}}">Logout</a></li>
+                    {% if user.is_authenticated and user.is_approved %}
+                    <li>
+                        <a class="{% if request.path == home_url %}active" aria-current="page{% endif %}"
+                            href="{{ home_url }}">
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{% if request.path == orders_url %}active" aria-current="page{% endif %}"
+                            href="{{ orders_url }}">
+                            Orders
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li>
+                        <a aria-current="page" href="{{ logout_url}}">
+                            Logout
+                        </a>
+                    </li>
                 </ul>
             </div>
         </nav>
 
         <ul id="mobile-demo" class="sidenav">
-            <li><a class="{% if request.path == home_url %}active" aria-current="page{% endif %}"
-                    href="{{ home_url }}">Home</a>
+            {% if user.is_authenticated and user.is_approved %}
+            <li>
+                <a class="{% if request.path == home_url %}active" aria-current="page{% endif %}"
+                    href="{{ home_url }}">
+                    Home
+                </a>
             </li>
-            <li><a class="{% if request.path == orders_url %}active" aria-current="page{% endif %}"
-                    href="{{ orders_url }}">Orders</a></li>
-            <li><a aria-current="page"
-                    href="{{ logout_url}}">Logout</a></li>
+            <li>
+                <a class="{% if request.path == orders_url %}active" aria-current="page{% endif %}"
+                    href="{{ orders_url }}">
+                    Orders
+                </a>
+            </li>
+            {% endif %}
+            <li>
+                <a aria-current="page" href="{{ logout_url}}">
+                Logout
+                </a>
+            </li>
         </ul>
         <p class="greeting">Hello, {{ user }}</p>
     </header>
     <main>
-        {% block content %}
-        {% endblock %}
+        {% if user.is_authenticated and user.is_approved %}
+            {% block content %}
+            {% endblock %}
+        {% else %}
+        <div class="not-authorized-main">
+            <div class="not-authorized">
+                <h1>Welcome to TakeCare</h1>
+                <p>To use our page you must register and be approved by your manager.</p>
+                <p>If you have register and need to access our website, please contact the responsible person to
+                    authorize you.
+                </p>
+            </div>
+        </div>
+        {% endif %}
     </main>
     <footer class="page-footer">
         <div class="footer-copyright">
@@ -66,27 +101,5 @@
         </div>
     </footer>
 </body>
-
-{% else %}
-
-<body>
-    <nav class="blue-grey lighten-1">
-        <div class="not-authorized-nav">
-            <a href="{{ home_url }}" class="brand-logo right">TakeCare</a>
-            <a class="{% if request.path == logout_url %}active" aria-current="page{% endif %}" href="{{ logout_url}}">Logout</a>
-        </div>
-    </nav>
-    <div class="not-authorized-body">
-        <div class="not-authorized">
-            <h1>Welcome to TakeCare</h1>
-            <p>To use our page you must register and be approved by your manager.</p>
-            <p>If you have register and need to access our website, please contact the responsible person to
-                authorize you.
-            </p>
-        </div>
-    </div>
-   
-</body>
-{% endif %}
 
 </html>
