@@ -15,6 +15,10 @@
     color: rgb(36, 48, 54);
 }
 
+.order-status {
+    cursor: help;
+}
+
 /* Authorized user home/orders basic view */
 .authorized-body {
     display: flex;
@@ -39,12 +43,14 @@ footer {
 
 /* order.html */
 /* Buttons */
-.order-buttons {
+.add-item,
+.submit-order {
     margin-left: 20px;
+    margin-bottom: 20px;
 }
 
-.order-buttons button {
-    margin: 0 10px;
+.hidden-button {
+    display: none;
 }
 
 /* Item list display */
@@ -102,6 +108,7 @@ form {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
+    padding: 10px 0;
 }
 
 .order-list>li>p {
@@ -133,13 +140,16 @@ form {
     width: 100%;
 }
 
-.edit-order {
-    margin-top: 20px;
-}
-
 .orders-title {
     margin: 20px;
     font-size: xx-large;
+}
+
+/* Buttons */
+.edit-order,
+.delete-order {
+    margin-top: 20px;
+    margin-right: 20px;
 }
 
 /* Order status */
@@ -226,13 +236,11 @@ nav {
 }
 
 /* Not authorized view */
-.not-authorized-body {
-    background: url(../images/background.jpg) no-repeat center center fixed;
-    background-size: cover;
+.not-authorized-main {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    height: 100vh;
+    max-height: 100vh;
     margin: 0;
 }
 
@@ -251,8 +259,9 @@ nav {
 
 /* Media queries */
 @media screen and (min-width: 768px) {
-    main {
-        width: 1000px;
+    .authorized-main {
+        max-width: 1000px;
+        width: 100%;
         margin-right: auto;
         margin-left: auto;
     }
