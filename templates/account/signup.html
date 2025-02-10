@@ -13,6 +13,27 @@
 
   <form class="signup col s12" id="signup_form" method="post" action="{% url 'account_signup' %}">
     {% csrf_token %}
+    
+    {% if form.non_field_errors %}
+    <div class="error">
+      {% for error in form.non_field_errors %}
+      <p style="color: red;">{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% for field in form %}
+    <p>
+      {% if field.errors %}
+      <span style="color: red;">
+        {% for error in field.errors %}
+          {{ error }}
+        {% endfor %}
+      </span>
+      {% endif %}
+    </p>
+    {% endfor %}
+
     <div class="row">
       <div class="input-field col s10">
         <label for="id_login">Username</label>
