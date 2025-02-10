@@ -3,6 +3,14 @@
 
 {% block content %}
 <div class="authorized-main">
+    <div class="form-text">
+        <div class="information">
+            <p>To use our system, please select the items you want to order. You can also filter them by category.
+            Then, enter the quantity and click the <strong>"Add"</strong> button.</p>
+            <p>When you have finished adding items, click the <strong>"Save"</strong> button to save your order.</p>
+        </div>
+        <span class="close-form-text">&times;</span>
+    </div>
     <form method="post" id="order-form" action="{% url 'create_order' %}">
         {% csrf_token %}
         <div class="row">
@@ -26,7 +34,7 @@
             </div>
         </div>
     </form>
-    <button type="button" class="add-item waves-effect waves-light btn-small blue-grey tooltipped"
+    <button type="button" class="add-item btn-small cyan darken-4 tooltipped"
         data-action="{% url 'add_item_to_session' %}" data-tooltip="Add item to order">
         Add
     </button>
@@ -37,7 +45,7 @@
         <ul id="item-list">
         </ul>
     </div>
-    <button type="submit" class="submit-order waves-effect waves-light btn-small blue-grey tooltipped"
+    <button type="submit" class="submit-order btn-small cyan darken-4 tooltipped"
         data-tooltip="Save your order">
         Save<i class="material-icons right">send</i>
     </button>

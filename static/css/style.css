@@ -88,6 +88,22 @@ footer {
     padding: 5px 0;
 }
 
+/* Informational paragraph */
+.form-text {
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: rgb(233, 245, 246);
+}
+
+.close-form-text {
+    display: block;
+    text-align: right;
+    cursor: pointer;
+    padding: 0 20px;
+}
+
 /* Form */
 form {
     margin-top: 50px;
@@ -259,10 +275,28 @@ nav {
 
 /* Media queries */
 @media screen and (min-width: 768px) {
+    /* General view */
     .authorized-main {
         max-width: 1000px;
         width: 100%;
         margin-right: auto;
         margin-left: auto;
+    }
+
+    /* Hover effects */
+    .add-item:hover,
+    .submit-order:hover,
+    .delete-order:hover,
+    .edit-order:hover {
+        opacity: 0.8;
+        transition: 0.3s;
+    }
+
+    .confirm-delete:hover,
+    .no-delete:hover {
+        background-color: rgb(36, 48, 54);
+        color: #fff;
+        opacity: 0.8;
+        transition: 0.5s;
     }
 }

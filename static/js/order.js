@@ -319,6 +319,25 @@ $(document).ready(function () {
         });
     });
 
+    // Close information about how to use the app
+    $(".close-form-text").click(function() {
+        let isVisible = $(".information").is(":visible");
+        
+        $(".information").slideToggle( function () {
+            if (isVisible) {
+                $(".form-text").removeClass("form-text");
+            } 
+        });
+
+        if (isVisible) {
+            $(this).html("&#8744;");
+        }
+        else {
+            $(this).html("&times;");
+            $(".information").parent().addClass("form-text");
+        }
+    });
+
     // Materialize CSS initializators
     $('.sidenav').sidenav();
 
