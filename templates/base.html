@@ -1,5 +1,5 @@
 {% load static %}
-{% url 'order' as home_url %}
+{% url 'order' as order_url %}
 {% url 'order_view' as orders_url %}
 {% url 'account_login' as login_url %}
 {% url 'account_signup' as signup_url %}
@@ -19,22 +19,22 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link rel="icon" type="image/png" sizes="16x16" href="../static/images/pills-16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="../static/images/pills-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/pills-16.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/pills-32.png' %}">
 </head>
 
 <body class="authorized-body">
     <header>
         <nav class="authorized-nav">
             <div class="nav wrapper">
-                <a href="{{ home_url }}" class="brand-logo right" id="brand-logo-color">TakeCare</a>
-                <a href="{{ home_url }}" data-target="mobile-demo" class="sidenav-trigger"><i
+                <a href="{{ order_url }}" class="brand-logo right" id="brand-logo-color">TakeCare</a>
+                <a href="{{ order_url }}" data-target="mobile-demo" class="sidenav-trigger"><i
                         class="material-icons">menu</i></a>
                 <ul id="nav-mobile" class="left hide-on-med-and-down">
                     {% if user.is_authenticated and user.is_approved %}
                     <li>
-                        <a class="{% if request.path == home_url %}active" aria-current="page{% endif %}"
-                            href="{{ home_url }}">
+                        <a class="{% if request.path == order_url %}active" aria-current="page{% endif %}"
+                            href="{{ order_url }}">
                             Home
                         </a>
                     </li>
@@ -57,8 +57,8 @@
         <ul id="mobile-demo" class="sidenav">
             {% if user.is_authenticated and user.is_approved %}
             <li>
-                <a class="{% if request.path == home_url %}active" aria-current="page{% endif %}"
-                    href="{{ home_url }}">
+                <a class="{% if request.path == order_url %}active" aria-current="page{% endif %}"
+                    href="{{ order_url }}">
                     Home
                 </a>
             </li>
@@ -97,6 +97,11 @@
         <div class="footer-copyright">
             <div class="container">
                 © 2025 Copyright TakeCare All Rights Reserved
+                <a class="grey-text text-lighten-4 right tooltipped" href="https://www.linkedin.com/"
+                target="_blank" aria-label="Open LinkdIn page on a new tab" rel="noopener" 
+                data-tooltip="Follow us here" data-position="top">
+                    LinkedIn<i class="material-icons right">linkedin</i>
+                </a>
             </div>
         </div>
     </footer>
