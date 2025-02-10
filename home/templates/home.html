@@ -1,11 +1,124 @@
+{% load static %}
+{% url 'home' as home_url %}
+{% url 'account_login' as login_url %}
+{% url 'account_signup' as signup_url %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>TakeCare</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/order.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/pills-16.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/pills-32.png' %}">
 </head>
 <body>
-    TESTING
+    <header>
+        <nav class="cyan darken-4">
+            <div class="nav wrapper">
+                <a href="{{ home_url }}" class="brand-logo right" id="brand-logo-color">TakeCare</a>
+                <a href="{{ home_url }}" data-target="mobile-demo" class="sidenav-trigger"><i
+                        class="material-icons">menu</i></a>
+                <ul id="nav-mobile" class="left hide-on-med-and-down">
+                    <li>
+                        <a class="{% if request.path == login_url %}active" aria-current="page{% endif %}" href="{{ login_url }}">
+                            Login
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{% if request.path == signup_url %}active" aria-current="page{% endif %}"
+                            href="{{ signup_url }}">
+                            Register
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+            
+        <ul id="mobile-demo" class="sidenav">
+            <li>
+                <a class="{% if request.path == login_url %}active" aria-current="page{% endif %}" href="{{ login_url }}">
+                    Login
+                </a>
+            </li>
+            <li>
+                <a class="{% if request.path == signup_url %}active" aria-current="page{% endif %}" href="{{ signup_url }}">
+                    Register
+                </a>
+            </li>
+        </ul>
+    </header>
+    <main>
+    <div class="parallax-container">
+        <div class="parallax">
+            <img src="{% static 'images/hero-home.webp' %}" aria-label="Stethoscope and a mask in a green background">
+        </div>
+    </div>
+    <div class="section white">
+        <div class="row container">
+            <h2 class="header">Welcome to TakeCare</h2>
+            <h3>The Smart Inventory Management for Healthcare</h3>
+            <p class="grey-text text-darken-3 lighten-3">
+                TakeCare is designed to streamline inventory requests for healthcare facilities. Our system ensures that medical staff
+                can efficiently request the supplies they need, while warehouse managers maintain full control over stock levels.
+            </p>
+        </div>
+    </div>
+    <div class="section cyan accent-4">
+        <div class="row container">
+            <h3 class="header">How It Works:</h3>
+            <p class="grey-text text-darken-3 lighten-3">
+                <ul>
+                    <li class="home-list">
+                        <i class="material-icons left">assignment</i><strong>Healthcare Employees:</strong> Submit requests for medical supplies directly through the platform. Once approved, you'll receive
+                        a notification when your items are ready for pickup.
+                    </li>
+                    <li class="home-list">
+                        <i class="material-icons left">inventory</i><strong>Warehouse Managers:</strong> Upload stock, approve requests, and receive real-time alerts for low inventory, expiring items, and pending user
+                        approvals.
+                    </li>
+                    <li class="home-list">
+                        <i class="material-icons left">local_shipping</i><strong>Optimized Distribution:</strong> Ensure that supplies are organized and ready for collection, reducing delays and improving efficiency.
+                    </li>
+                </ul> 
+
+                With TakeCare, healthcare professionals can focus on what matters most—providing excellent patient care.
+            </p>
+        </div>
+    </div>
+    <div class="section white">
+        <div class="row container">
+            <h3>Contact</h3>
+            <p class="grey-text text-darken-3 lighten-3">
+                Interested? Please contact us at via
+                <a href="mailto:mariafacchin00@gmail.com" class="cyan-text text-darken-3" aria-label="Send an email to Maria">e-mail</a>. 
+                You can also follow us on 
+                <a class="cyan-text text-darken-3 tooltipped" href="https://www.linkedin.com/" target="_blank"
+                    aria-label="Open LinkdIn page on a new tab" rel="noopener" data-tooltip="Follow us here" data-position="top">
+                    LinkedIn
+                </a> 
+                for updates and news.
+            </p>
+        </div>
+    </div>
+    </main>
+    <footer class="page-footer cyan darken-4">
+        <div class="footer-copyright">
+            <div class="container">
+                © 2025 Copyright TakeCare All Rights Reserved
+                <a class="grey-text text-lighten-4 right tooltipped" href="https://www.linkedin.com/" target="_blank"
+                    aria-label="Open LinkdIn page on a new tab" rel="noopener" data-tooltip="Follow us here"
+                    data-position="top">
+                    LinkedIn<i class="material-icons right">linkedin</i>
+                </a>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
