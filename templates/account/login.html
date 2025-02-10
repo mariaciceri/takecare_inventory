@@ -10,9 +10,11 @@
   <h1 class="signin-title">{% trans "Sign In" %}</h1>
 
   <p>{% blocktrans %}If you don't have an account,
-    <a href="{{ signup_url }}">sign up</a> for one first.{% endblocktrans %}
+    <a href="{{ signup_url }}">sign up</a> for one first 
+    {% endblocktrans %}
+    or go back to
+    <a href="{% url 'home:home' %}">Home.</a>
   </p>
-
   
   <form class="login col s12" method="POST" action="{% url 'account_login' %}">
     {% if form.non_field_errors %}
