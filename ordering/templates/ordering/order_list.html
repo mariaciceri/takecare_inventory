@@ -11,7 +11,8 @@
     <ul class="order-list">
         {% for order in orders %}
         <li>
-            <a href="#" data-id="{{ order.id }}" id="order-{{ order.id }}" class="order-in-list">
+            <a href="#" data-id="{{ order.id }}" id="order-{{ order.id }}" class="order-in-list" 
+            aria-label="Past order number {{ order.id }} with status {{ order.get_status_display }}">
                 Order: {{ order.id }}
             </a>
             <p class="{% if order.status == 1 %}approved{% elif order.status == 2 %}rejected{% else %}pending{% endif %} tooltipped order-status" 
@@ -35,8 +36,12 @@
         <p>This will permanentely erase your order from the system, making it impossible to retrieve it</p>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="modal-close waves-effect waves-green btn-flat red confirm-delete" data-id="">Yes</a>
-        <a href="#!" class="modal-close waves-effect waves-green btn-flat">No</a>
+        <a href="#!" aria-label="Confirm deletion" class="modal-close waves-effect waves-green btn-flat confirm-delete" data-id="">
+            Yes
+        </a>
+        <a href="#!" aria-label="Don't delete" class="modal-close waves-effect waves-green btn-flat">
+            No
+        </a>
     </div>
 </div>
 
