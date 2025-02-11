@@ -20,7 +20,7 @@
 }
 
 /* Authorized user home/orders basic view */
-.authorized-body {
+.base-body {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
@@ -298,5 +298,9 @@ nav {
         color: #fff;
         opacity: 0.8;
         transition: 0.5s;
+    }
+
+    .container {
+        max-width: 1000px !important;
     }
 }
