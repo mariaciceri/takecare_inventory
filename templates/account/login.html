@@ -12,11 +12,11 @@
   <p>{% blocktrans %}If you don't have an account,
     <a href="{{ signup_url }}">sign up</a> for one first 
     {% endblocktrans %}
-    or go back to
-    <a href="{% url 'home:home' %}">Home.</a>
+    or go back to <a href="{% url 'home:home' %}">Home.</a>
   </p>
   
   <form class="login col s12" method="POST" action="{% url 'account_login' %}">
+    <!-- Error message display -->
     {% if form.non_field_errors %}
     <div class="alert alert-danger">
       {% for error in form.non_field_errors %}
@@ -25,6 +25,7 @@
     </div>
     {% endif %}
     {% csrf_token %}
+    <!-- Form fields -->
     <div class="row">
       <div class="input-field col s10">
         <label for="id_login">Username</label>

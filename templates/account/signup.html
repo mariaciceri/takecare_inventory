@@ -9,11 +9,15 @@
 <div class="signup-page">
   <h1>{% trans "Sign Up" %}</h1>
 
-  <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+  <p>
+    {% blocktrans %}
+    Already have an account? Then please <a href="{{ login_url }}">sign in</a>.
+    {% endblocktrans %} Or go back to <a href="{% url 'home:home' %}">Home.</a>
+  </p>
 
   <form class="signup col s12" id="signup_form" method="post" action="{% url 'account_signup' %}">
     {% csrf_token %}
-    
+    <!-- Error displaying message when trying to register -->
     {% if form.non_field_errors %}
     <div class="error">
       {% for error in form.non_field_errors %}
@@ -34,6 +38,7 @@
     </p>
     {% endfor %}
 
+    <!-- fields of the form -->
     <div class="row">
       <div class="input-field col s10">
         <label for="id_login">Username</label>
