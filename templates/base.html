@@ -29,7 +29,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/pills-32.png' %}">
 </head>
 
-<body class="authorized-body">
+<body class="base-body">
     <header>
         <nav class="{% if user.is_authenticated %}authorized-nav{% else %}blue-grey{% endif%}">
             <div class="nav wrapper">
