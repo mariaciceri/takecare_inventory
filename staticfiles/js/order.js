@@ -1,20 +1,18 @@
-$(document).ready(function () {
-
-    function renderItems(items) {
-        /**
-        * Display items in the home page
-        */
-        if (items.length === 0) {
-            $(".item-list-title").text("No items in cart");
-            return;
-        }
-        else {
-            $(".item-list-title").text("Items in cart");
-        }
-        $("#item-list").empty();
-        items.forEach(item => {
-            $("#item-list").prepend(
-                `<li data-id="${item.item_id}">${item.name} 
+/**
+* Display items in the home page
+*/
+function renderItems(items) {
+    if (items.length === 0) {
+        $(".item-list-title").text("No items in cart");
+        return;
+    }
+    else {
+        $(".item-list-title").text("Items in cart");
+    }
+    $("#item-list").empty();
+    items.forEach(item => {
+        $("#item-list").prepend(
+            `<li data-id="${item.item_id}">• ${item.name} 
                         <input type="number" value="${item.quantity}"
                         min="1" class="item-quantity-adjust">
                         <button class="remove-item waves-effect waves-light btn-small blue-grey tooltipped" data-item_id="${item.item_id}" data-tooltip="Delete this item from order">
@@ -22,30 +20,31 @@ $(document).ready(function () {
                         </button>
                         </li>
                         `
-            )
-        });
-        // Initialize tooltips for newly added items delete button
-        $('.tooltipped').tooltip({
-            enterDelay: 1000,
-            margin: 0,
-        });
-    }
+        )
+    });
+    // Initialize tooltips for newly added items delete button
+    $('.tooltipped').tooltip({
+        enterDelay: 1000,
+        margin: 0,
+    });
+}
 
-    function messageDisplay(message) {
-        /**
-        * Display feedback to users after an action
-        */
-        $("#message").fadeOut("fast", function () {
-            $(this).html(message).fadeIn("slow");
-        });
+/**
+* Display feedback to users after an action
+*/
+function messageDisplay(message) {
+    $("#message").fadeOut("fast", function () {
+        $(this).html(message).fadeIn("slow");
+    });
 
-        setTimeout(() => {
-            $("#message").fadeOut("slow", function () {
-                $(this).empty();
-            })
-        }, 1500);
-    }
+    setTimeout(() => {
+        $("#message").fadeOut("slow", function () {
+            $(this).empty();
+        })
+    }, 1500);
+}
 
+$(document).ready(function () {
     if (window.location.pathname === "/") {
         // Populate with items in session
         $.ajax({
@@ -74,6 +73,7 @@ $(document).ready(function () {
             success: function (response) {
                 messageDisplay(response.success);
                 renderItems(response.order_items);
+                $("#item-quantity").val("");
             },
             error: function (error) {
                 messageDisplay(error.responseJSON.message);
@@ -112,14 +112,15 @@ $(document).ready(function () {
 
         let itemId = $(this).parent().attr("data-id");
         let quantity = $(this).val();
+        const csrfToken = $("input[name='csrfmiddlewaretoken']").val();
 
         // Deletes the item if user manually sets quantity to 0 or less
         if (quantity < 1) {
             $.ajax({
                 type: "POST",
                 url: `/delete_item/${itemId}`,
-                data:{
-                    csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
+                headers: {
+                    'X-CSRFToken': csrfToken
                 },
                 success: function (response) {
                     messageDisplay(response.success);
@@ -129,15 +130,16 @@ $(document).ready(function () {
                     messageDisplay(error.responseJSON.message);
                 },
             });
-
             return;
         };
 
         $.ajax({
             type: "POST",
             url:`/update_item_quantity/${itemId}`,
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
             data: {
-                csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
                 quantity: quantity,
             },
             success: function (response) {
@@ -153,20 +155,29 @@ $(document).ready(function () {
     });
 
     // Place an order
-    $("#order-form").submit(function (e) {
+    $(".submit-order").on("click", function (e) {
         e.preventDefault();
 
-        const form = $(this);
+        const form = $("#order-form");
         const formAction = form.attr("action");
+        const orderId = localStorage.getItem("editingOrderId");
+
+        const formData = form.serializeArray();
+
+        if (orderId) {
+            formData.push({ name: "order_id", value: orderId });
+        }
 
         $.ajax({
             type: "POST",
             url: formAction,
-            data: form.serialize(),
+            data: $.param(formData),
             success: function (response) {
                 messageDisplay(response.success);
                 $(".item-list-title").text("No items in cart");
                 $("#item-list").empty();
+
+                localStorage.removeItem("editingOrderId");
             },
             error: function (error) {
                 messageDisplay(error.responseJSON.error);
@@ -201,14 +212,21 @@ $(document).ready(function () {
                         </li><hr>`
                 );
 
-                const isDisabled = response.status !== 0;
+                const isProcessed = response.status !== 0;
                 // Add undo and edit button
                 orderDetails.append(
-                    `<button type="button" class="edit-order 
-                    ${isDisabled ? 'btn-flat disabled' : 'waves-effect waves-light btn-small blue-grey'} tooltipped"
-                    data-id="${orderId}" data-tooltip="This will delete the order, allowing you to update it. You must resend it after.">
-                            Undo and Edit Order
-                    </button>`
+                    `
+                    <button type="button" class="edit-order 
+                    ${isProcessed ? 'hidden-button' : 'waves-effect waves-light btn-small blue-grey'} tooltipped"
+                    data-id="${orderId}" data-tooltip="Edit your order.">
+                            Edit<i class="material-icons right">edit</i>
+                    </button>
+                    <button type="button" class="delete-order 
+                    ${isProcessed ? 'hidden-button' : 'btn modal-trigger waves-effect waves-light btn-small blue-grey'} tooltipped"
+                    data-id="${orderId}" data-tooltip="Delete your order" data-target="modal1">
+                        Delete<i class="material-icons right">clear</i>
+                    </button>
+                    `
                 );
 
                 // Initialize tooltips for newly added items buttons
@@ -224,11 +242,12 @@ $(document).ready(function () {
         });
     });
 
-    // Undo and Edit order
-    $("#order-details").on("click", ".edit-order", function (e) {
+    //Edit order
+    $(document).on("click", ".edit-order", function (e) {
         e.preventDefault();
 
-        const orderId = $("a[data-id]").data("id");
+        const orderId = $(this).data("id");
+        localStorage.setItem("editingOrderId", orderId);
 
         $.ajax({
             type: "GET",
@@ -238,6 +257,37 @@ $(document).ready(function () {
             },
             error: function (error) {
                 $(".error-message").text("Failed to undo order. Please try again.");
+            }
+        });
+    });
+    
+    // Delete order
+    $(document).on("click", ".delete-order", function (e) {
+        const orderId = $(this).data("id");
+
+        $(".confirm-delete").data("id", orderId);
+    });
+
+    $(".confirm-delete").click(function (e) {
+        e.preventDefault();
+
+        const orderId = $(this).data("id");
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        $.ajax({
+            type: "POST",
+            url: `/delete_order/${orderId}`,
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            success: function (response) {
+                // Remove the order from the list
+                $(`a[data-id="${orderId}"]`).closest("li").slideUp("slow", function () {
+                    $(this).remove();
+                });
+            },
+            error: function (error) {
+                console.log(error.responseJSON.error);
             }
         });
     });
@@ -268,6 +318,25 @@ $(document).ready(function () {
         });
     });
 
+    // Close/show information about how to use the app
+    $(".close-form-text").click(function() {
+        let isVisible = $(".information").is(":visible");
+        
+        $(".information").slideToggle( function () {
+            if (isVisible) {
+                $(".form-text").removeClass("form-text");
+            } 
+        });
+
+        if (isVisible) {
+            $(this).html("&#8744;");
+        }
+        else {
+            $(this).html("&times;");
+            $(".information").parent().addClass("form-text");
+        }
+    });
+
     // Materialize CSS initializators
     $('.sidenav').sidenav();
 
@@ -278,4 +347,7 @@ $(document).ready(function () {
         margin: 0,
     });
 
+    $('.modal').modal();
+
+    $('.parallax').parallax();
 });
