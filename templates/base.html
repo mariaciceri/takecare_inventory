@@ -12,6 +12,12 @@
     <title>TakeCare</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" 
+        content="Inventory management app for health workers. Workers can request items directly to the warehouse where the manager will approve or not, as well as manage stock levels">
+    <meta name="keywords" 
+        content="health clinic inventory, medical inventory management, hospital stock tracking, clinic supplies management, medical inventory software, healthcare stock control, Django inventory system, track medical supplies, pharmacy inventory, healthcare logistics">
+    <meta name="author" content="Maria Ciceri">
     <meta name="csrf-token" content="{{ csrf_token }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'js/order.js' %}"></script>
@@ -25,11 +31,14 @@
 
 <body class="authorized-body">
     <header>
-        <nav class="authorized-nav">
+        <nav class="{% if user.is_authenticated %}authorized-nav{% else %}blue-grey{% endif%}">
             <div class="nav wrapper">
-                <a href="{{ order_url }}" class="brand-logo right" id="brand-logo-color">TakeCare</a>
-                <a href="{{ order_url }}" data-target="mobile-demo" class="sidenav-trigger"><i
-                        class="material-icons">menu</i></a>
+                <a href="{{ order_url }}" class="brand-logo right" {% if user.is_authenticated %}id="brand-logo-color"{% endif %}>
+                    TakeCare
+                </a>
+                <a href="{{ order_url }}" data-target="mobile-demo" class="sidenav-trigger" {% if user.is_authenticated %}id="sidenav-trigger"{% endif %}>
+                    <i class="material-icons">menu</i>
+                </a>
                 <ul id="nav-mobile" class="left hide-on-med-and-down">
                     {% if user.is_authenticated and user.is_approved %}
                     <li>
@@ -44,12 +53,25 @@
                             Orders
                         </a>
                     </li>
+                    {% elif not user.is_authenticated %}
+                        <li>
+                            <a class="{% if request.path == login_url %}active" aria-current="page{% endif %}" href="{{ login_url }}">
+                                Login
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{% if request.path == signup_url %}active" aria-current="page{% endif %}" href="{{ signup_url }}">
+                                Register
+                            </a>
+                        </li>
                     {% endif %}
+                    {% if user.is_authenticated %}
                     <li>
                         <a aria-current="page" href="{{ logout_url}}">
                             Logout
                         </a>
                     </li>
+                    {% endif %}
                 </ul>
             </div>
         </nav>
@@ -68,20 +90,33 @@
                     Orders
                 </a>
             </li>
-            {% endif %}
+            {% elif not user.is_authenticated %}
             <li>
-                <a aria-current="page" href="{{ logout_url}}">
-                Logout
+                <a class="{% if request.path == login_url %}active" aria-current="page{% endif %}" href="{{ login_url }}">
+                    Login
                 </a>
             </li>
+            <li>
+                <a class="{% if request.path == signup_url %}active" aria-current="page{% endif %}" href="{{ signup_url }}">
+                    Register
+                </a>
+            </li>
+            {% endif %}
+            {% if user.is_authenticated %}
+            <li>
+                <a aria-current="page" href="{{ logout_url}}">
+                    Logout
+                </a>
+            </li>
+            {% endif %}
         </ul>
-        <p class="greeting">Hello, {{ user }}</p>
+        <p class="greeting">{% if user.is_authenticated %}Hello, {{ user }} {% endif %}</p>
     </header>
     <main>
         {% if user.is_authenticated and user.is_approved %}
             {% block content %}
             {% endblock %}
-        {% else %}
+        {% elif user.is_authenticated %}
         <div class="not-authorized-main">
             <div class="not-authorized">
                 <h1>Welcome to TakeCare</h1>
@@ -91,6 +126,9 @@
                 </p>
             </div>
         </div>
+        {% else %}
+            {% block home_page %}
+            {% endblock %}
         {% endif %}
     </main>
     <footer class="page-footer">
