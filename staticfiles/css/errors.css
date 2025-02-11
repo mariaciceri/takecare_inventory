@@ -1,0 +1,70 @@
+/* General styling */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: white;
+    cursor: pointer;
+}
+
+h1 {
+    margin-bottom: 15px;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.desktop-img {
+    display: none;
+}
+
+/* Message container */
+.message-container {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+    margin: 10px;
+    padding: 20px;
+    color: white;
+    position: fixed;
+}
+
+/* Position message at the bottom when error 404 */
+.error-404 {
+    bottom: 30px;
+}
+
+@media screen and (min-width: 768px) {
+    .message-container{
+        background-color: transparent;
+        width: 400px;
+        height: auto;
+        left: 50px;
+        bottom: 30%;
+    }
+
+    .desktop-img {
+        display: block;
+    }
+
+    .phone-img {
+        display: none;
+    }
+
+    /* Make container smaller for error 500 page */
+    .error-500 {
+        width: 300px;
+        bottom: 45%;
+    }
+}
