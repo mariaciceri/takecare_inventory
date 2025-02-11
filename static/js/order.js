@@ -130,7 +130,6 @@ $(document).ready(function () {
                     messageDisplay(error.responseJSON.message);
                 },
             });
-
             return;
         };
 
@@ -319,7 +318,7 @@ $(document).ready(function () {
         });
     });
 
-    // Close information about how to use the app
+    // Close/show information about how to use the app
     $(".close-form-text").click(function() {
         let isVisible = $(".information").is(":visible");
         
