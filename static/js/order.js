@@ -12,7 +12,7 @@ function renderItems(items) {
     $("#item-list").empty();
     items.forEach(item => {
         $("#item-list").prepend(
-            `<li data-id="${item.item_id}">• ${item.name} 
+            `<li data-id="${item.item_id}">${item.name} 
                         <input type="number" value="${item.quantity}"
                         min="1" class="item-quantity-adjust">
                         <button class="remove-item waves-effect waves-light btn-small blue-grey tooltipped" data-item_id="${item.item_id}" data-tooltip="Delete this item from order">
@@ -190,7 +190,7 @@ $(document).ready(function () {
         e.preventDefault();
 
         let orderId = $(this).data("id");
-        let orderDetails = $(this).closest("li").find("#order-details");
+        let orderDetails = $(this).closest("li").find(".order-details");
 
         $.ajax({
             type: "GET",

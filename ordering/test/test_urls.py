@@ -1,6 +1,10 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
-from ordering.views import order, add_item_to_session, create_order, edit_order, delete_item, filter_items, order_view, order_items, session_items, update_item_quantity
+from ordering.views import (
+    order, add_item_to_session, create_order, edit_order, delete_item,
+    filter_items, order_view, order_items, session_items, update_item_quantity
+)
+
 
 class TestUrls(SimpleTestCase):
 

@@ -132,17 +132,17 @@ form {
 }
 
 /* Order details display */
-#order-details {
+.order-details {
     display: none;
     margin: 20px 0;
 }
 
-#order-details>li {
+.order-details>li {
     display: flex;
     justify-content: space-between;
 }
 
-#order-details>li>p {
+.order-details>li>p {
     margin: 0;
 }
 

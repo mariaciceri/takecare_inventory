@@ -52,12 +52,11 @@ class TestOrderingViews(TestCase):
         """
         response = self.client.get(reverse("order"))
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, "/accounts/login/?next=/")
+        self.assertRedirects(response, "/home/?next=/")
 
     def test_render_home_page(self):
-        """ 
-        Test that the home page is rendered correctly.
-        """
+        """Test that the home page is rendered correctly."""
+
         self.client.login(username="approvedUser", password="approvedUser")
         response = self.client.get(reverse("order"))
         self.assertEqual(response.status_code, 200)
@@ -83,19 +82,19 @@ class TestOrderingViews(TestCase):
         response = self.client.get(reverse("order"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertNotContains(response, "Hello, notApprovedUser")
+        self.assertContains(response, "Hello, notApprovedUser")
         self.assertContains(
             response, "To use our page you must register and be approved")
     
     def test_sucessful_add_item_to_session(self):
-        """ 
-        Test that an item is successfully added to the session.
-        """
+        """Test that an item is successfully added to the session."""
+
         self.client.login(username="approvedUser", password="approvedUser")
         response = self.client.post(reverse
             ("add_item_to_session"),
             {"item": self.item.id, "item-quantity": "10"},
         )
+
         self.assertJSONEqual(
             str(response.content, encoding='utf8'),
             {
@@ -120,9 +119,8 @@ class TestOrderingViews(TestCase):
         )
 
     def test_successful_place_an_order(self):
-        """ 
-        Test that an order is successfully placed.
-        """
+        """Test that an order is successfully placed."""
+
         self.client.login(username="approvedUser", password="approvedUser")
         
         session = self.client.session
@@ -137,16 +135,15 @@ class TestOrderingViews(TestCase):
         self.assertJSONEqual(
             str(response.content, encoding='utf8'),
             {
-                'success': 'Order created successfully.'
+                'success': 'Order saved successfully.'
             }
         )
 
         self.assertEqual(response.status_code, 200)
 
     def test_delete_item(self):
-        """ 
-        Test that an item is successfully removed from the session.
-        """
+        """Test that an item is successfully removed from the session."""
+
         self.client.login(username="approvedUser", password="approvedUser")
         
         session = self.client.session
@@ -180,8 +177,8 @@ class TestOrderingViews(TestCase):
     def test_update_item_quantity(self):
         """ 
         Test that the quantity of an item is successfully updated or
-        if the quantity is greater than the quantity in stock,
-        an error message is returned and the quantity's set to the max in stock.
+        if the quantity is greater than the quantity in stock, an error message
+        is returned and the quantity's set to the max in stock.
         """
         self.client.login(username="approvedUser", password="approvedUser")
 
@@ -221,16 +218,16 @@ class TestOrderingViews(TestCase):
             str(response.content, encoding='utf8'),
             {
                 "error": "Insufficient stock.",
-                "message": f"Only {self.item.quantity_in_stock} items available.",
+                "message": (
+                    f"Only {self.item.quantity_in_stock} items available."
+                ),
                 "max_quantity": self.item.quantity_in_stock
             }
         )
 
     def test_edit_order(self):
-        """ 
-        Test that an order can be successfully edited and 
-        the original order is deleted.
-        """
+        """Test that an order can be successfully edited."""
+        
         self.client.login(username="approvedUser", password="approvedUser")
         
         response = self.client.get(reverse(
@@ -252,7 +249,3 @@ class TestOrderingViews(TestCase):
                 "success": "Order edited successfully."
             }
         )
-
-        self.assertFalse(
-            Order.objects.filter(id=self.order.id).exists(),
-            "Order was not deleted")

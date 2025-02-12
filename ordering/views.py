@@ -24,16 +24,17 @@ def order(request):
     return render(
         request,
         'ordering/order.html',
-            {
+        {
             "user": user,
             "items": items,
             "categories": categories
-            }
-        )
+        }
+    )
+
 
 @login_required
 def order_view(request):
-    """ 
+    """
     Displays the sent orders page.
 
     ***Context***
@@ -50,9 +51,10 @@ def order_view(request):
         {"orders": orders}
         )
 
+
 @login_required
 def order_items(request, order_id):
-    """ 
+    """
     Retrieves the items in an order to display them.
 
     ***Context***
@@ -81,9 +83,10 @@ def order_items(request, order_id):
     except Order.DoesNotExist:
         return JsonResponse({"error": "Order not found."}, status=404)
 
+
 @login_required
 def session_items(request):
-    """ 
+    """
     Retrieves the items in the session to display them.
 
     ***Context***
@@ -98,8 +101,9 @@ def session_items(request):
         }
     )
 
+
 def check_quantity_validity(quantity, item):
-    """ 
+    """
     Checks if the quantity is valid by checking if it's a positive
     number and less than or equal to the quantity in stock.
     """
@@ -111,18 +115,18 @@ def check_quantity_validity(quantity, item):
             }, status=400)
     elif quantity > item.quantity_in_stock:
         return JsonResponse(
-        {
-            "error": "Insufficient stock.",
-            "message": f"""Only {item.quantity_in_stock} {item.name} 
+            {
+                "error": "Insufficient stock.",
+                "message": f"""Only {item.quantity_in_stock} {item.name} 
 available."""
-        }, status=400)
+            }, status=400)
     else:
         return None
-    
+
 
 @login_required
 def add_item_to_session(request):
-    """ 
+    """
     Adds an item to the session.
 
     ***Context***
@@ -158,11 +162,11 @@ def add_item_to_session(request):
         for item_in_order in order_items:
             if str(item_in_order["item_id"]) == item_id:
                 new_quantity = item_in_order["quantity"] + quantity
-                if  new_quantity > item.quantity_in_stock:
+                if new_quantity > item.quantity_in_stock:
                     return JsonResponse(
                         {
                             "error": "Insufficient stock.",
-                            "message": f"""Only 
+                            "message": f"""Only
 {item.quantity_in_stock - item_in_order["quantity"]} {item.name} available."""
                         },
                         status=400
@@ -185,9 +189,10 @@ def add_item_to_session(request):
             })
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+
 @login_required
 def create_order(request):
-    """ 
+    """
     Creates an order from the items in the session.
 
     ***Context***
@@ -201,7 +206,7 @@ def create_order(request):
         # Check if there are items to order
         if not order_items:
             return JsonResponse({"error": "No items to order."}, status=400)
-        
+
         order_id = request.POST.get("order_id")
         try:
             if order_id:
@@ -232,9 +237,10 @@ def create_order(request):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
 
+
 @login_required
 def delete_item(request, item_id):
-    """ 
+    """
     Deletes an item from the session by filtering it out.
 
     ***Context***
@@ -247,7 +253,7 @@ def delete_item(request, item_id):
         order_items = request.session.get("order_items", [])
 
         order_items = (
-        [item for item in order_items if str(item["item_id"]) != item_id]
+            [item for item in order_items if str(item["item_id"]) != item_id]
         )
 
         request.session["order_items"] = order_items
@@ -259,9 +265,10 @@ def delete_item(request, item_id):
         )
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+
 @login_required
 def update_item_quantity(request, item_id):
-    """ 
+    """
     Update the quantity of an item in the session.
 
     ***Context***
@@ -274,17 +281,17 @@ def update_item_quantity(request, item_id):
     """
     if request.method == "POST":
         quantity = request.POST.get("quantity")
-        quantity_in_stock =  Item.objects.get(id=item_id).quantity_in_stock
+        quantity_in_stock = Item.objects.get(id=item_id).quantity_in_stock
         order_items = request.session.get("order_items", [])
-        
+
         if int(quantity) > int(quantity_in_stock):
             return JsonResponse(
                 {
                     "error": "Insufficient stock.",
                     "message": f"Only {quantity_in_stock} items available.",
                     "max_quantity": quantity_in_stock
-                },status=400)
-        
+                }, status=400)
+
         for item in order_items:
             if str(item["item_id"]) == item_id:
                 item["quantity"] = int(quantity)
@@ -298,9 +305,10 @@ def update_item_quantity(request, item_id):
             })
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+
 @login_required
 def edit_order(request, order_id):
-    """ 
+    """
     Edits an order by deleting the original order and creating a new one.
 
     ***Context***
@@ -321,16 +329,17 @@ def edit_order(request, order_id):
                     "name": item.item.name,
                     "quantity": item.quantity
                 })
-        
+
         request.session["order_items"] = order_items
 
         return JsonResponse({"success": "Order edited successfully."})
     except Order.DoesNotExist:
         return JsonResponse({"error": "Order not found."}, status=404)
-    
+
+
 @login_required
 def delete_order(request, order_id):
-    """ 
+    """
     Deletes an order.
 
     ***Context***
@@ -343,7 +352,8 @@ def delete_order(request, order_id):
         return JsonResponse({"success": "Order deleted successfully."})
     except Order.DoesNotExist:
         return JsonResponse({"error": "Order not found."}, status=404)
-    
+
+
 def filter_items(request, category):
     """
     Filters items by category.

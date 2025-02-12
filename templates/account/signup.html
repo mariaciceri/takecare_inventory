@@ -41,14 +41,18 @@
     <!-- fields of the form -->
     <div class="row">
       <div class="input-field col s10">
-        <label for="id_login">Username</label>
+        <label for="id_username">Username</label>
         {{ form.username|add_class:"validate" }}
       </div>
     </div>
     <div class="row">
       <div class="input-field col s10">
-        <label for="id_password">Password</label>
+        <label for="id_password1">Password</label>
         {{ form.password1|add_class:"validate" }}
+        <small id="id_password1_helptext"> 
+          Password must be at least 8 characters, not easily guessable, 
+          and cannot be entirely numeric or match personal information.
+        </small>
       </div>
     </div>
     <div class="row">
@@ -59,7 +63,7 @@
     </div>
     <div class="row">
       <div class="input-field col s12">
-        <label for="email">Email</label>
+        <label for="id_email">Email</label>
         {{ form.email|add_class:"validate" }}
       </div>
     </div>

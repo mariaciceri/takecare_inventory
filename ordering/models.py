@@ -16,7 +16,7 @@ class CustomUser(AbstractUser):
 
 class Order(models.Model):
     """Stores the order details of a user"""
-    user = models.ForeignKey( 
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
         related_name='orders'
         )
@@ -44,7 +44,7 @@ class Category(models.Model):
     """Stores the category of an item"""
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
-        
+ 
     def __str__(self):
         return f"Category: {self.name}"
 
@@ -97,7 +97,6 @@ class OrderItem(models.Model):
                 f"""The quantity must be less than or
 equal to the quantity in stock ({self.item.quantity_in_stock})."""
                 )
-
 
     def __str__(self):
         return f"{self.quantity} {self.item.name}. Order: {self.order.id}"

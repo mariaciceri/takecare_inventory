@@ -4,11 +4,13 @@ from .models import CustomUser, Order, Category, Item, OrderItem
 from django.forms import DateInput
 import datetime
 
+
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
     readonly_fields = ['item', 'quantity']
     can_delete = False
+
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
@@ -19,25 +21,19 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
 
     def get_readonly_fields(self, request, obj=None):
-        """
-        Makes all fields read-only.
-        """
+        """Makes all fields read-only"""
         if obj:
             return [field.name for field in self.model._meta.fields]
         return []
-    
+
     def has_change_permission(self, request, obj=None):
-        """
-        Disables the change permission.
-        """
+        """Disables the change permission."""
         if obj:
             return False
         return True
 
     def approve_orders(self, request, queryset):
-        """
-        Approves the selected orders.
-        """
+        """Approves the selected orders."""
         for order in queryset:
             try:
                 if order.status == 0:
@@ -61,9 +57,7 @@ class OrderAdmin(admin.ModelAdmin):
                     )
 
     def reject_orders(self, request, queryset):
-        """
-        Rejects the selected orders.
-        """
+        """Rejects the selected orders."""
         for order in queryset:
             try:
                 if order.status == 0:
@@ -84,8 +78,9 @@ class OrderAdmin(admin.ModelAdmin):
                     f"Order {order.id} could not be rejected: {e}",
                     level=messages.ERROR
                     )
-    
+
     actions = ['approve_orders', 'reject_orders']
+
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
@@ -102,9 +97,7 @@ class ItemAdmin(admin.ModelAdmin):
     ordering = ('quantity_in_stock', 'name')
 
     def formfield_for_dbfield(self, db_field, **kwargs):
-        """
-        Adds a date picker for the expiration date field.
-        """
+        """Adds a date picker for the expiration date field"""
         if db_field.name == "expiration_date":
             kwargs['widget'] = DateInput(attrs={
                 'type': 'date',
@@ -114,74 +107,78 @@ class ItemAdmin(admin.ModelAdmin):
         return super().formfield_for_dbfield(db_field, **kwargs)
 
     def low_stock_alert(self, obj):
-        """
-        Adds a 'Low Stock' warning for items with quantity below 100.
-        """
+        """Adds a 'Low Stock' warning for items with quantity below 100"""
         if obj.quantity_in_stock == 0:
             return format_html(
-                '<span style="color: red; font-weight: bold;">Out of Stock</span>'
+                """<span style="color: red; font-weight: bold;">
+                Out of Stock
+                </span>"""
                 )
         elif obj.quantity_in_stock < 100:
             return format_html(
-                '<span style="color: orange; font-weight: bold;">Low Stock</span>'
+                """<span style="color: orange; font-weight: bold;">
+                Low Stock
+                </span>"""
                 )
-        
+
         return ""
-    
+
     def close_exp_date(self, obj):
-        """
-        Adds a 'Close Expiration Date' warning for items with expiration date
-        """
-        if obj.expiration_date <= datetime.date.today():
+        """Adds a 'Close Expiration Date' warning"""
+        date = datetime.date.today()
+        if obj.expiration_date <= date:
             return format_html(
                 '<span style="color: red; font-weight: bold;">Expired</span>'
                 )
-        elif obj.expiration_date < datetime.date.today() + datetime.timedelta(days=30):
+        elif obj.expiration_date < date + datetime.timedelta(days=30):
             return format_html(
-                '<span style="color: orange; font-weight: bold;">Close Expiration Date</span>'
+                """<span style="color: orange; font-weight: bold;">
+                Close Expiration Date
+                </span>"""
                 )
         return ""
 
     def has_module_permission(self, request):
-        """
-        Check for items expiring within 30 days, expired items, and low in stock
-        """
+        """Check for expired/expiring-within-30-days items or low in stock"""
+        date = datetime.date.today()
         expiring_items = Item.objects.filter(
-            expiration_date__lte=datetime.date.today() + datetime.timedelta(days=30),
-            expiration_date__gt=datetime.date.today())
-        expired_items = Item.objects.filter(expiration_date__lte=datetime.date.today())
+            expiration_date__lte=date + datetime.timedelta(days=30),
+            expiration_date__gt=date)
+        expired_items = Item.objects.filter(expiration_date__lte=date)
         low_in_stock = Item.objects.filter(quantity_in_stock__lt=100)
         not_in_stock = Item.objects.filter(quantity_in_stock=0)
 
         if expiring_items.exists():
-            message = f"{expiring_items.count()} item(s) are close to expiration!"
-        
+            message = f"""{expiring_items.count()} item(s)
+are close to expiration!"""
+
             storage = messages.get_messages(request)
             if message not in [msg.message for msg in storage]:
                 self.message_user(request, message, level=messages.WARNING)
 
         if expired_items.exists():
             message = f"{expired_items.count()} item(s) have expired!"
-        
+
             storage = messages.get_messages(request)
             if message not in [msg.message for msg in storage]:
                 self.message_user(request, message, level=messages.ERROR)
 
         if low_in_stock.exists():
             message = f"{low_in_stock.count()} item(s) are low in stock!"
-        
+
             storage = messages.get_messages(request)
             if message not in [msg.message for msg in storage]:
                 self.message_user(request, message, level=messages.WARNING)
 
         if not_in_stock.exists():
             message = f"{not_in_stock.count()} item(s) are out of stock!"
-        
+
             storage = messages.get_messages(request)
             if message not in [msg.message for msg in storage]:
                 self.message_user(request, message, level=messages.ERROR)
 
         return super().has_module_permission(request)
+
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
@@ -190,13 +187,12 @@ class CustomUserAdmin(admin.ModelAdmin):
     search_fields = ('username', 'email')
 
     def has_module_permission(self, request):
-        """
-        Check for unapproved users and display a warning if any are found.
-        """
+        """Check for unapproved users and display a warning"""
         unapproved_users = CustomUser.objects.filter(is_approved=False)
         if unapproved_users.exists():
-            message = f"{unapproved_users.count()} users are pending approval!"
-        
+            message = f"""{unapproved_users.count()} user(s)
+are pending approval!"""
+
             storage = messages.get_messages(request)
             if message not in [msg.message for msg in storage]:
                 self.message_user(request, message, level=messages.WARNING)
@@ -204,5 +200,5 @@ class CustomUserAdmin(admin.ModelAdmin):
         return super().has_module_permission(request)
 
 
-admin.site.register(Category) 
+admin.site.register(Category)
 admin.site.site_header = 'TakeCare System Administration'
