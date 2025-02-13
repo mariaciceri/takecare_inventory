@@ -284,16 +284,20 @@ def update_item_quantity(request, item_id):
         quantity_in_stock = Item.objects.get(id=item_id).quantity_in_stock
         order_items = request.session.get("order_items", [])
 
-        if int(quantity) > int(quantity_in_stock):
-            return JsonResponse(
-                {
-                    "error": "Insufficient stock.",
-                    "message": f"Only {quantity_in_stock} items available.",
-                    "max_quantity": quantity_in_stock
-                }, status=400)
-
         for item in order_items:
             if str(item["item_id"]) == item_id:
+                if int(quantity) > int(quantity_in_stock):
+                    item["quantity"] = int(quantity_in_stock)
+                    request.session["order_items"] = order_items
+                    return JsonResponse(
+                        {
+                            "error": "Insufficient stock.",
+                            "message": (
+                                f"Only {quantity_in_stock} items available."
+                            ),
+                            "max_quantity": quantity_in_stock
+                        }, status=400)
+
                 item["quantity"] = int(quantity)
                 break
 
