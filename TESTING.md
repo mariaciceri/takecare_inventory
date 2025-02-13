@@ -22,6 +22,16 @@
 
 ### Lighthouse
 
++ Lighthouse in DevTools confirms that the overall performance is efficient, accessibility standards are met, and the chosen colors and fonts ensure readability.
+
+    + Home page
+    ![Lighthouse performance screenshot](/docs/images/lighthouse-home.png)
+
+    + Ordering page
+    ![Lighthouse performance screenshot](/docs/images/lighthouse-ordering.png)
+
+    + Orders page
+    ![Lighthouse performance screenshot](/docs/images/lighthouse-orders.png)
 
 ### PEP8 
 
@@ -46,7 +56,22 @@
 
 ### Compatibility
 
-### Responsiveness 
++ The page was tested for compatibility on Firefox, Chrome, and Safari, and it functions flawlessly across all three browsers.
+
+    + Firefox:
+    ![Page working on firefox gif](/docs/images/firefox.gif)
+
+    + Chrome:
+    ![Page working on chrome gif](/docs/images/chrome.gif)
+
+    + Safari:
+    ![Page working on safari gif](/docs/images/safari.gif)
+
+### Responsiveness
+
++ The page is responsive and works well for both small and large screens.
+
+![Page responsiveness gif](/docs/images/responsiveness.gif)
 
 ### Manual Testing
 
