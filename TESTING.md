@@ -75,6 +75,46 @@
 
 ### Manual Testing
 
++ Manual testing was performed to ensure that the application behaves as expected in real-world usage. Each feature was tested by manually interacting with the interface, verifying functionality, and identifying any issues.
+
+| Page | Action | Result |
+| --- | --- | --- |
+| Home | Click on login button on navbar | Takes user to the page to login |
+| Home | Click on register button on navbar | Takes user to sign up page |
+| Home | Click on the email link in the contact section. | Opens the user's email provider with the page's email pre-filled in the recipient field |
+| Home | Click on LinkedIn link in the contact section | Opens LinkedIn page on another tab |
+| Sign in | Click on the sign up link | Takes the user to the sign up page |
+| Sign in | Type wrong/non-existing username/password | Display a message informing the user of the problem |
+| Login/Sign up | Click on the home link | Takes the user to the home page |
+| Sign up | Click on the sign in link | Takes the user to the sign in page |
+| Sign up | Types wrong/non-existing username/password | Displays a message informing the user of the problem |
+| Sign up | Type an username that is already taken | Displays a message notifying the user that the selected username is already taken |
+| Sign up | Type an email that is already taken | Displays a message notifying the user that the provided email is already associated with another user |
+| Sign up | Type an invalid password | Displays a message explaining why the chosen password does not meet the requirements |
+| Unauthorized Page/Ordering/Orders | Click on logout button in the navbar | Takes user to the logout confirmation page |
+| Ordering | Click on the 'x' button to close informational message | Hides the message and change the button to an arrow down |
+| Ordering | Click on the arrow down to display informational message | Shows the message and change the button to a 'x' |
+| Ordering | Click on the category select field | Show available categories |
+| Ordering | Select one of the categories | Filter the items by category |
+| Ordering | Click on the item select field | Show available items |
+| Ordering | Click on the add button without selecting quantity | Shows a 1.5-second notification that the quantity must be a positive integer |
+| Ordering | Click on the add button with item quantity greater than the available in stock | Shows a 1.5-second notification of the available stock quantity |
+| Ordering | Click the add button for an item already in the order | Increase the quantity of the item in the order by the amount selected |
+| Ordering | Click the add button for an item already in the order when the total quantity exceeds stock availability.| Shows a 1.5-second notification of the available stock quantity |
+| Ordering | Click on the add button with item quantity less or equal than the available in stock | Shows a 1.5-second notification that the item was added, then displays the item, its quantity, and a 'remove' button. |
+| Ordering | Click on the 'remove' button of an item | Shows a 1.5-second notification that the item was removed |
+| Ordering | Click on the save button without any items | Shows a 1.5-second notification that there are no items to order |
+| Ordering | Click on the save button with at least one item | Shows a 1.5-second notification that the order was saved |
+| Ordering | Click on the orders button on the navbar | Takes the user to the past orders page |
+| Orders | Click on the home button on the navbar | Takes the user to the main (ordering) page |
+| Orders | Click on an order | Displays the items and its quantities for that order below it. If the order is pending, displays edit and delete button |
+| Orders | Click on the edit button | Redirects to the main page with the order items and a message indicating the order being edited |
+| Orders | Click on the delete button | Opens a modal to confirm deletion |
+| Orders | Click on the yes button | Deletes the order and erases from the page |
+| Orders | Click on the no button | Closes the modal |
+| Sign out | Click sign out button | Confirms signing out and takes user to home page |
+| All pages | Click on LinkedIn link in the footer section | Opens LinkedIn page on another tab |
+
 ### Automated testing
 
 ### Bugs
