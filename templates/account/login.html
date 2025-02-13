@@ -38,13 +38,6 @@
         {{ form.password|add_class:"validate" }}
       </div>
     </div>
-    <div class="input-field col s10">
-      <p>
-        <label>
-          {{ form.remember }} <span>Remember Me</span>
-        </label>
-      </p>
-    </div>
     {% if redirect_field_value %}
     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
     {% endif %}

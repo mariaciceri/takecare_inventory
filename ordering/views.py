@@ -117,7 +117,7 @@ def check_quantity_validity(quantity, item):
         return JsonResponse(
             {
                 "error": "Insufficient stock.",
-                "message": f"""Only {item.quantity_in_stock} {item.name} 
+                "message": f"""Only {item.quantity_in_stock} {item.name}
 available."""
             }, status=400)
     else:
@@ -356,7 +356,7 @@ def delete_order(request, order_id):
         order_items = request.session.get("order_items", [])
         if order_items:
             del request.session["order_items"]
-            
+
         return JsonResponse({"success": "Order deleted successfully."})
     except Order.DoesNotExist:
         return JsonResponse({"error": "Order not found."}, status=404)
