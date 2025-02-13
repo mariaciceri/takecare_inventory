@@ -1,5 +1,5 @@
 /**
-* Display items in the home page
+* Display items in the ordering page
 */
 function renderItems(items) {
     if (items.length === 0) {
@@ -15,7 +15,7 @@ function renderItems(items) {
             `<li data-id="${item.item_id}">${item.name} 
                         <input type="number" value="${item.quantity}"
                         min="1" class="item-quantity-adjust">
-                        <button class="remove-item waves-effect waves-light btn-small blue-grey tooltipped" data-item_id="${item.item_id}" data-tooltip="Delete this item from order">
+                        <button class="remove-item btn-small blue-grey tooltipped" data-item_id="${item.item_id}" data-tooltip="Delete this item from order">
                             &times;
                         </button>
                         </li>
@@ -51,6 +51,15 @@ $(document).ready(function () {
             type: "GET",
             url: "session_items",
             success: function (response) {
+                if (response.order_items.length === 0) {
+                    localStorage.removeItem("editingOrderId");
+                }
+                // Check if user is editing an order and display message
+                if (localStorage.getItem("editingOrderId")) {
+                    id = localStorage.getItem("editingOrderId");
+                    $("#editing-message").text(`You are editing order ${id}.`);
+                }
+                
                 renderItems(response.order_items);
             },
             error: function (error) {
@@ -176,6 +185,7 @@ $(document).ready(function () {
                 messageDisplay(response.success);
                 $(".item-list-title").text("No items in cart");
                 $("#item-list").empty();
+                $("#editing-message").text("");
 
                 localStorage.removeItem("editingOrderId");
             },

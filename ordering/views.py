@@ -353,6 +353,10 @@ def delete_order(request, order_id):
     try:
         order = Order.objects.get(id=order_id, user=request.user)
         order.delete()
+        order_items = request.session.get("order_items", [])
+        if order_items:
+            del request.session["order_items"]
+            
         return JsonResponse({"success": "Order deleted successfully."})
     except Order.DoesNotExist:
         return JsonResponse({"error": "Order not found."}, status=404)
