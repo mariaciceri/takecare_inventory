@@ -54,7 +54,7 @@
 | inventory/urls.py | ![PEP8 for home/views.py ](/docs/images/pep8-urls-inventory.png) | no issues |
 | inventory/settings.py | ![PEP8 for home/views.py ](/docs/images/pep8-settings.png) | no issues |
 
-### Compatibility
+## Compatibility
 
 + The page was tested for compatibility on Firefox, Chrome, and Safari, and it functions flawlessly across all three browsers.
 
@@ -67,13 +67,13 @@
     + Safari:
     ![Page working on safari gif](/docs/images/safari.gif)
 
-### Responsiveness
+## Responsiveness
 
 + The page is responsive and works well for both small and large screens.
 
 ![Page responsiveness gif](/docs/images/responsiveness.gif)
 
-### Manual Testing
+## Manual Testing
 
 + Manual testing was performed to ensure that the application behaves as expected in real-world usage. Each feature was tested by manually interacting with the interface, verifying functionality, and identifying any issues.
 
@@ -115,9 +115,17 @@
 | Sign out | Click sign out button | Confirms signing out and takes user to home page |
 | All pages | Click on LinkedIn link in the footer section | Opens LinkedIn page on another tab |
 
-### Automated testing
+// ADMIN PAGE MANUAL TESTING
 
-### Bugs
+## Automated testing
+
+## Bugs
 
 | Bug | Fix |
 | --- | --- |
+| Adding the same item to the order created duplicate entries instead of increasing the quantity | When adding an item to the order, go through the session and if the item is already present, increase the quantity |
+| Updating the item quantity to over the max available was not updating it in the session | Going through the session to update it with the max quantity |
+| General home page was not loading properly for authenticated users | Checked which was the requested path and show the proper content |
+| If after clicking edit, going back to the orders page and deleting the order, its content remained available for editing | Clear the session after deleting the order and verify if it's empty to remove localStorage data |
+| Alert messages were displaying in the admin login page | Remove the message block from the base.html and place it in the index.html |
+| 
