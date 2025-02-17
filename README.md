@@ -93,12 +93,30 @@ The page is designed for healthcare professionals, including nurses, doctors, an
 ### Home page
 - If the user is unauthenticated:
     - They can login or register by clicking on the links in the navbar.
-- If the user is authenticated:
+
+    ![Landing page nav](/docs/images/not-autenticated-nav.png)
+
+- If the user is authenticated and approved:
     - They can start requesting, view past order or logout by clicking on the links in the navbar.
+
+    ![Home page for authenticated/approved user](/docs/images/authoriozed-view.png)
+
+- If the user is authenticated but not approved:
+    - They will see a message confirming that they registered but are waiting for approval from management.
+
+    ![Home page for authenticated but not approved user](/docs/images/not-authorized-view.png)
 
 ### Admin panel
 - When an admin logs in, an alert message is displayed if there are expired or near-expiry items, low-stock items, or pending user approvals.
+
+![Admin home page alerts](/docs/images/warnings-admin-home.png)
+
 - When approving multiple orders at once, if stock is insufficient for all, older orders will be approved first, while newer ones will stay pending. An alert message will indicate which orders couldn't be fulfilled due to low stock.
+- If the order was already processed, the status can not be modified again.
+
+![Admin order already processed alert](/docs/images/warnings-admin-order-processed.png)
+![Admin approved order alert](/docs/images/warnings-admin-order-approved.png)
+
 - Manager can not add items without expiration date and the expiration date must be in the future.
 - When an order is approved, the items are subtracted from the stock.
 
@@ -108,9 +126,41 @@ The page is designed for healthcare professionals, including nurses, doctors, an
 - Users can edit item quantities in their session, up to the maximum available:
     - If the entered quantity exceeds stock, it is automatically adjusted to the maximum.
     - If the quantity is less than 1, the item is removed from the list.
+
+![Quantity check gif](docs/images/available-in-stock-message.gif)
+![Quantity check screenshot](docs/images/quantity-validation.png)
+
 - If the same item is added again via the form, the quantity updates. If the total exceeds available stock, the item is not added.
 - When the order is submitted, the home page is cleaned and the user can start a new request. If they leave an unsent order, the items in the order won't be lost if the page is closed/reloaded.
+- Feedback is present for all actions:
+    - Adding an item to the order:
+    ![Item added successfully message](docs/images/item-added.png)
+    - Deleting an item from the order:
+    ![Item deleted successfully message](docs/images/item-removed.png)
+    - Editing order:
+    ![Order being edited message](docs/images/editing-warning.png)
+    - Order sent to management:
+    ![Order sent successfully message](docs/images/order-saved.png)
+
+- The user can not submit an empty order.
+
+![Empty order warning](docs/images/no-items-to-order.png)
+
 - In the orders page, the users can see their past orders, items ordered, and statuses and modify the order if it is still pending.
+
+![Past orders page](docs/images/orders-display.png)
+![Past orders expanded](docs/images/orders-buttons.png)
+
+
+- Tooltips are available for the statuses:
+
+![Tooltip for pending order](docs/images/pending-order.png)
+![Tooltip for approved order](docs/images/approved-order.png)
+![Tooltip for rejected order](docs/images/rejected-order.png)
+
+- If deleting a pending order, a popup requesting confirmation is shown, if user clicks "yes", the order is deleted from the database, otherwise, the popup closes.
+
+![Deletion confirmation popup](docs/images/delete-confirmation.png)
 
 ## Technologies
 
@@ -139,7 +189,11 @@ The page is designed for healthcare professionals, including nurses, doctors, an
 ## Agile Development Process
 ### GitHub Projects
 
++ GitHub Projects has been a valuable tool for managing the Agile development process of this project. By using customizable boards, I’ve been able to break down the work into smaller, manageable tasks, which helped me prioritize features, and improvements in an organized manner.
 
+![github issues](/docs/images/github-issues.png)
+
+![kanban](docs/images/kanban.png)
 
 ## Deployment
 
