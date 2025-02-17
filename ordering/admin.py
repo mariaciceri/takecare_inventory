@@ -145,26 +145,31 @@ class ItemAdmin(admin.ModelAdmin):
         date = datetime.date.today()
         expiring_items = Item.objects.filter(
             expiration_date__lte=date + datetime.timedelta(days=30),
-            expiration_date__gt=date)
+            expiration_date__gt=date
+            )
         expired_items = Item.objects.filter(expiration_date__lte=date)
-        low_in_stock = Item.objects.filter(quantity_in_stock__lt=100)
+        low_in_stock = Item.objects.filter(
+            quantity_in_stock__lt=100, quantity_in_stock__gt=0
+            )
         not_in_stock = Item.objects.filter(quantity_in_stock=0)
 
         warnings = []
 
         if expiring_items.exists():
             warnings.append(f"""{expiring_items.count()} item(s)
-are close to expiration!"""
-            )
+are close to expiration!""")
 
         if expired_items.exists():
-            warnings.append(f"{expired_items.count()} item(s) have expired!")
+            warnings.append(
+                f"{expired_items.count()} item(s) have expired!")
 
         if low_in_stock.exists():
-            warnings.append(f"{low_in_stock.count()} item(s) are low in stock!")
+            warnings.append(
+                f"{low_in_stock.count()} item(s) are low in stock!")
 
         if not_in_stock.exists():
-            warnings.append(f"{not_in_stock.count()} item(s) are out of stock!")
+            warnings.append(
+                f"{not_in_stock.count()} item(s) are out of stock!")
 
         if warnings:
             request.session["admin_warnings"] = warnings
@@ -185,9 +190,8 @@ class CustomUserAdmin(admin.ModelAdmin):
         unapproved_users = CustomUser.objects.filter(is_approved=False)
 
         if unapproved_users.exists():
-            request.session["admin_user_warnings"] = [  
-            f"{unapproved_users.count()} user(s) are pending approval!"
-        ]
+            request.session["admin_user_warnings"] = [
+                f"{unapproved_users.count()} user(s) are pending approval!"]
         else:
             request.session.pop("admin_user_warnings", None)
 
