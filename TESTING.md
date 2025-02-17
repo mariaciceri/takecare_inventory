@@ -44,15 +44,16 @@
 | ordering/apps.py | ![PEP8 for ordering/apps.py ](/docs/images/pep8-apps-ordering.png) | no issues |
 | ordering/templatetags/custom_filters.py | ![PEP8 for ordering/templatetags/custom_filters.py ](/docs/images/pep8-custom-ordering.png) | no issues |
 | ordering/models.py | ![PEP8 for ordering/models.py ](/docs/images/pep8-models-ordering.png) | no issues |
-| ordering/test/test_urls.py | ![PEP8 for ordering/test/test_urls.py ](/docs/images/pep8-testurls-ordering.png) | no issues |
 | ordering/urls.py | ![PEP8 for ordering/urls.py ](/docs/images/pep8-urls-ordering.png) | no issues |
 | ordering/views.py | ![PEP8 for ordering/views.py ](/docs/images/pep8-views-ordering.png) | no issues |
-| ordering/test/test_views.py | ![PEP8 for ordering/test/test_views.py ](/docs/images/pep8-testviews-ordering.png) | no issues |
 | home/apps.py | ![PEP8 for home/apps.py ](/docs/images/pep8-apps-home.png) | no issues |
 | home/urls.py | ![PEP8 for home/urls.py ](/docs/images/pep8-urls-home.png) | no issues |
 | home/views.py | ![PEP8 for home/views.py ](/docs/images/pep8-views-home.png) | no issues |
 | inventory/urls.py | ![PEP8 for home/views.py ](/docs/images/pep8-urls-inventory.png) | no issues |
 | inventory/settings.py | ![PEP8 for home/views.py ](/docs/images/pep8-settings.png) | no issues |
+| test/test_admin.py | ![PEP8 for test/test_admin.py](/docs/images/pep8-test-admin.png) | no issues |
+| test/test_urls.py | ![PEP8 for test/test_urls.py](/docs/images/pep8-test-urls.png) | no issues |
+| test/test_views.py | ![PEP8 for test/test_views.py](/docs/images/pep8-test-views.png) | no issues |
 
 ## Compatibility
 
@@ -127,5 +128,5 @@
 | Updating the item quantity to over the max available was not updating it in the session | Going through the session to update it with the max quantity |
 | General home page was not loading properly for authenticated users | Checked which was the requested path and show the proper content |
 | If after clicking edit, going back to the orders page and deleting the order, its content remained available for editing | Clear the session after deleting the order and verify if it's empty to remove localStorage data |
-| Alert messages were displaying in the admin login page | Remove the message block from the base.html and place it in the index.html |
+| Alert messages were displaying in the admin login page | Remove the message block from the base.html and place it in the index.html | // RE DO
 | 
