@@ -4,6 +4,7 @@ from datetime import date
 from ordering.models import CustomUser
 from ordering.models import Category, Item, Order, OrderItem
 
+
 class TestOrderingViews(TestCase):
 
     def setUp(self):
@@ -45,36 +46,28 @@ class TestOrderingViews(TestCase):
             quantity=10
             )
 
-    def test_redirect_if_not_authenticated(self):
-        """
-        Test that the user is redirected to the login page 
-        if not authenticated.
-        """
-        response = self.client.get(reverse("order"))
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, "/home/?next=/")
-
     def test_render_home_page(self):
-        """Test that the home page is rendered correctly."""
-
+        """Test that the home page for ordering is rendered correctly."""
         self.client.login(username="approvedUser", password="approvedUser")
         response = self.client.get(reverse("order"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "ordering/order.html")
 
     def test_approved_user_correct_content(self):
-        """ 
+        """
         Test that the correct content is displayed for an approved user.
         """
         self.client.login(username="approvedUser", password="approvedUser")
         response = self.client.get(reverse("order"))
+
+        self.assertEqual(response.context["user"], self.approved_user)
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Hello, approvedUser")
         self.assertContains(response, "Test Item")
 
     def test_not_approved_user_correct_content(self):
-        """ 
+        """
         Test that the correct content is displayed for a not approved user.
         """
         self.client.login(
@@ -85,13 +78,22 @@ class TestOrderingViews(TestCase):
         self.assertContains(response, "Hello, notApprovedUser")
         self.assertContains(
             response, "To use our page you must register and be approved")
-    
+
+    def test_redirect_if_not_authenticated(self):
+        """
+        Test that the user is redirected to the general home page
+        if not authenticated.
+        """
+        response = self.client.get(reverse("order"))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, "/home/?next=/")
+
     def test_sucessful_add_item_to_session(self):
         """Test that an item is successfully added to the session."""
 
         self.client.login(username="approvedUser", password="approvedUser")
-        response = self.client.post(reverse
-            ("add_item_to_session"),
+        response = self.client.post(
+            reverse("add_item_to_session"),
             {"item": self.item.id, "item-quantity": "10"},
         )
 
@@ -122,7 +124,7 @@ class TestOrderingViews(TestCase):
         """Test that an order is successfully placed."""
 
         self.client.login(username="approvedUser", password="approvedUser")
-        
+
         session = self.client.session
         session["order_items"] = [{
             "item_id": self.item.id,
@@ -145,7 +147,7 @@ class TestOrderingViews(TestCase):
         """Test that an item is successfully removed from the session."""
 
         self.client.login(username="approvedUser", password="approvedUser")
-        
+
         session = self.client.session
         session["order_items"] = [{
             "item_id": self.item.id,
@@ -175,7 +177,7 @@ class TestOrderingViews(TestCase):
         self.assertEqual(len(json_response["order_items"]), 0)
 
     def test_update_item_quantity(self):
-        """ 
+        """
         Test that the quantity of an item is successfully updated or
         if the quantity is greater than the quantity in stock, an error message
         is returned and the quantity's set to the max in stock.
@@ -195,7 +197,7 @@ class TestOrderingViews(TestCase):
             kwargs={"item_id": str(self.item.id)}),
             {"quantity": 5}
         )
-        
+
         self.assertJSONEqual(
             str(response.content, encoding='utf8'),
             {
@@ -225,11 +227,34 @@ class TestOrderingViews(TestCase):
             }
         )
 
-    def test_edit_order(self):
-        """Test that an order can be successfully edited."""
-        
+    def test_view_past_orders(self):
+        """Test that the past orders page is rendered correctly."""
+
         self.client.login(username="approvedUser", password="approvedUser")
-        
+        response = self.client.get(
+            reverse(
+                "order_items",
+                kwargs={"order_id": str(self.order.id)})
+        )
+
+        self.assertEqual(response.status_code, 200)
+        expected_items = [{"name": self.item.name,
+                          "quantity": self.order_item.quantity}]
+
+        self.assertJSONEqual(
+            str(response.content, encoding='utf8'),
+            {
+                "order_items": expected_items,
+                "status": self.order.status
+
+            }
+        )
+
+    def test_edit_order_request(self):
+        """Test that an order can be successfully edited."""
+
+        self.client.login(username="approvedUser", password="approvedUser")
+
         response = self.client.get(reverse(
             "edit_order",
             kwargs={"order_id": self.order.id})
@@ -246,6 +271,35 @@ class TestOrderingViews(TestCase):
         self.assertJSONEqual(
             str(response.content, encoding='utf8'),
             {
-                "success": "Order edited successfully."
+                "success": "Request order editing successful."
             }
         )
+
+    def test_delete_order(self):
+        """Test that an order can be successfully deleted."""
+
+        self.client.login(username="approvedUser", password="approvedUser")
+
+        session = self.client.session
+        session["order_items"] = [{
+            "item_id": self.item.id,
+            "name": self.item.name,
+            "quantity": 10
+        }]
+        session.save()
+
+        response = self.client.post(reverse(
+            "delete_order",
+            kwargs={"order_id": str(self.item.id)}
+            )
+        )
+
+        self.assertJSONEqual(
+            str(response.content, encoding='utf8'),
+            {
+                "success": "Order deleted successfully."
+            }
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Order.objects.filter(id=self.order.id).exists())
