@@ -41,7 +41,8 @@ class OrderAdmin(admin.ModelAdmin):
                     order.status = 1
                     order.save()
                     self.message_user(
-                        request, f"Order {order.id} was approved."
+                        request, f"Order {order.id} was approved.",
+                        level=messages.SUCCESS
                         )
                 else:
                     self.message_user(
@@ -64,7 +65,8 @@ class OrderAdmin(admin.ModelAdmin):
                     order.status = 2
                     order.save()
                     self.message_user(
-                        request, f"Order {order.id} was rejected."
+                        request, f"Order {order.id} was rejected.",
+                        level=messages.SUCCESS
                         )
                 else:
                     self.message_user(
@@ -148,34 +150,26 @@ class ItemAdmin(admin.ModelAdmin):
         low_in_stock = Item.objects.filter(quantity_in_stock__lt=100)
         not_in_stock = Item.objects.filter(quantity_in_stock=0)
 
-        if expiring_items.exists():
-            message = f"""{expiring_items.count()} item(s)
-are close to expiration!"""
+        warnings = []
 
-            storage = messages.get_messages(request)
-            if message not in [msg.message for msg in storage]:
-                self.message_user(request, message, level=messages.WARNING)
+        if expiring_items.exists():
+            warnings.append(f"""{expiring_items.count()} item(s)
+are close to expiration!"""
+            )
 
         if expired_items.exists():
-            message = f"{expired_items.count()} item(s) have expired!"
-
-            storage = messages.get_messages(request)
-            if message not in [msg.message for msg in storage]:
-                self.message_user(request, message, level=messages.ERROR)
+            warnings.append(f"{expired_items.count()} item(s) have expired!")
 
         if low_in_stock.exists():
-            message = f"{low_in_stock.count()} item(s) are low in stock!"
-
-            storage = messages.get_messages(request)
-            if message not in [msg.message for msg in storage]:
-                self.message_user(request, message, level=messages.WARNING)
+            warnings.append(f"{low_in_stock.count()} item(s) are low in stock!")
 
         if not_in_stock.exists():
-            message = f"{not_in_stock.count()} item(s) are out of stock!"
+            warnings.append(f"{not_in_stock.count()} item(s) are out of stock!")
 
-            storage = messages.get_messages(request)
-            if message not in [msg.message for msg in storage]:
-                self.message_user(request, message, level=messages.ERROR)
+        if warnings:
+            request.session["admin_warnings"] = warnings
+        else:
+            request.session.pop("admin_warnings", None)
 
         return super().has_module_permission(request)
 
@@ -189,13 +183,13 @@ class CustomUserAdmin(admin.ModelAdmin):
     def has_module_permission(self, request):
         """Check for unapproved users and display a warning"""
         unapproved_users = CustomUser.objects.filter(is_approved=False)
-        if unapproved_users.exists():
-            message = f"""{unapproved_users.count()} user(s)
-are pending approval!"""
 
-            storage = messages.get_messages(request)
-            if message not in [msg.message for msg in storage]:
-                self.message_user(request, message, level=messages.WARNING)
+        if unapproved_users.exists():
+            request.session["admin_user_warnings"] = [  
+            f"{unapproved_users.count()} user(s) are pending approval!"
+        ]
+        else:
+            request.session.pop("admin_user_warnings", None)
 
         return super().has_module_permission(request)
 

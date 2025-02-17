@@ -313,7 +313,7 @@ def update_item_quantity(request, item_id):
 @login_required
 def edit_order(request, order_id):
     """
-    Edits an order by deleting the original order and creating a new one.
+    Prepare the items in the order for editing.
 
     ***Context***
     ``order``
@@ -336,7 +336,7 @@ def edit_order(request, order_id):
 
         request.session["order_items"] = order_items
 
-        return JsonResponse({"success": "Order edited successfully."})
+        return JsonResponse({"success": "Request order editing successful."})
     except Order.DoesNotExist:
         return JsonResponse({"error": "Order not found."}, status=404)
 

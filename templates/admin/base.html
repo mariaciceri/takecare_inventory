@@ -99,6 +99,30 @@
           {% block pretitle %}{% endblock %}
           {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
           <!-- INSERT ALERTS HERE -->
+          <div class="messages">
+            {% if request.path == "/admin/" and request.session.admin_warnings %}
+            <div>
+              {% for message in request.session.admin_warnings %}
+              <div class="alert alert-warning">{{ message }}</div>
+              {% endfor %}
+            </div>
+            {% endif %}
+            {% if request.path == "/admin/" and request.session.admin_user_warnings %}
+            <div>
+              {% for message in request.session.admin_user_warnings %}
+              <div class="alert alert-user-warning">{{ message }}</div>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+          {% block messages %}
+          {% if messages %}
+          <ul class="messagelist">{% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message|capfirst }}</li>
+              {% endfor %}
+          </ul>
+          {% endif %}
+          {% endblock messages %}
           {% block content_subtitle %}{% if subtitle %}<h2>{{ subtitle }}</h2>{% endif %}{% endblock %}
           {% block content %}
           {% block object-tools %}{% endblock %}

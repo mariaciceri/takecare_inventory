@@ -11,3 +11,23 @@
     font-size: 16px;
     color: #333;
 }
+
+/* Warnings messages admin home page */
+.messages {
+    margin: 10px 0;
+    padding: 10px;
+}
+
+.alert {
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+}
+
+.alert-warning {
+    background-color: rgba(223, 66, 66, 0.75);
+}
+
+.alert-user-warning {
+    background-color: rgba(244, 210, 77, 0.75);
+}
