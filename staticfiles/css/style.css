@@ -7,8 +7,8 @@
 
 /* base.html */
 .greeting {
-    text-align: end;
-    padding: 0 10px;
+    right: 15px;
+    position: absolute;
 }
 
 .active {
@@ -97,7 +97,7 @@ footer {
 /* Informational paragraph */
 .form-text {
     padding: 20px;
-    margin-top: 20px;
+    margin: 30px 10px 0;
     border: 1px solid black;
     border-radius: 5px;
     background-color: rgb(233, 245, 246);
