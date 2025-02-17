@@ -84,13 +84,23 @@ The page is designed for healthcare professionals, including nurses, doctors, an
 + [Github](https://github.com/) hosts the project.
 + [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript) with [JQuery](https://jquery.com/) add interactivity to the page.
 + [Django](https://www.djangoproject.com/) connects the front-end and back-end.
++ [Django Allauth](https://docs.allauth.org/en/latest/) for user authentication.
 + [PostgresQL](https://www.postgresql.org/) (provided by Code Institute) stores data.
 + [Heroku](https://www.heroku.com/) handles deployment.
++ [Whitenoise](https://whitenoise.readthedocs.io/en/latest/) serves static files to Heroku.
 
 ## Database Design
 
-- ERD for the project:
+- The Entity-Relationship Diagram for the project was created on [dbdiagram.io](https://dbdiagram.io/home) before starting the project and adjusted as small changes were made.
+
 ![erd](/docs/images/erd.png)
+
+- At the end of the project, `pygraphviz` and `django-extensions` were used to create a complete ERD for this project.
+
+![complete erd](/docs/images/complete-erd.png)
+
+## Agile Development Process
+### GitHub Projects
 
 ## Deployment
 
