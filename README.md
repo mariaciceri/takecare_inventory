@@ -51,6 +51,43 @@ The page is designed for healthcare professionals, including nurses, doctors, an
 
     ![Approved order](/docs/images/wireframe-approved-order.png)
 
+## User Stories
+
++ As a first-time visitor, the user:
+    + Is taken to the home page:
+        + The landing page introduces the purpose and features of the app.
+        + A brief overview explains the app's benefits and how it can be used effectively.
+        + The user is provided with a clear call-to-action (CTA) to learn more about the app's functionalities, features, and its intended audience.
+    + Can easily register to use the app:
+        + A visible and user-friendly registration button allows the user to sign up easily.
+        + The registration form requires essential details, such as name, email, and password, for account creation.
+
++ As a return visitor, the user:
+    + Will be redirected to the home page for registered users (if approved by management):
+        + Upon login, the user is directed to a homepage tailored for registered users.
+        + The user can access all functionalities of the app.
+        + Can easily see information on how to make requests.
+        + Can filter items by selecting a category.
+        + Can select items to order and specify the quantity.
+        + A clear "Save" button is available, allowing the user to confirm their selections and send the order to the system.
+        + The user can see a message that the order has been submitted successfully.
+        + Can navigate to the orders tab to view past orders and statuses:
+        + Each order displays key details, such as the status (pending, approved, rejected) and can be clicked to view items ordered.
+        + If an order is still pending, the user can edit or delete it by clicking on "Edit" or "Delete" button below the items ordered.
+    + If the user is registered but yet to be approved:
+        + The user is presented with a message on the home page stating that their registration is still awaiting approval from management.
+
++ Manager and Admin users can:
+    + Create new categories.
+    + Define expiration date, stock quantity, and item criticality when registering items in the system.
+    + The manager/admin can set the stock quantity available and whether an item is labeled as critical or non-critical (to indicate its importance for inventory management).
+    + See alerts when an item’s stock is low or when the expiration date is near.
+    + See warnings on admin home page if items are expired/expiring or low-in/out-of stock.
+    + Can review and approve or reject new user registrations.
+    + Can review and approve or reject orders submitted by users based on availability and criticality of items.
+    + See notifications when there are new pending user or order approvals.
+
+
 ## Features
 
 ### Home page
@@ -101,6 +138,8 @@ The page is designed for healthcare professionals, including nurses, doctors, an
 
 ## Agile Development Process
 ### GitHub Projects
+
+
 
 ## Deployment
 
