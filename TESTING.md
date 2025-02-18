@@ -78,6 +78,8 @@
 
 + Manual testing was performed to ensure that the application behaves as expected in real-world usage. Each feature was tested by manually interacting with the interface, verifying functionality, and identifying any issues.
 
++ Users pages
+
 | Page | Action | Result |
 | --- | --- | --- |
 | Home | Click on login button on navbar | Takes user to the page to login |
@@ -102,8 +104,8 @@
 | Ordering | Click on the add button with item quantity greater than the available in stock | Shows a 1.5-second notification of the available stock quantity |
 | Ordering | Click the add button for an item already in the order | Increase the quantity of the item in the order by the amount selected |
 | Ordering | Click the add button for an item already in the order when the total quantity exceeds stock availability.| Shows a 1.5-second notification of the available stock quantity |
-| Ordering | Click on the add button with item quantity less or equal than the available in stock | Shows a 1.5-second notification that the item was added, then displays the item, its quantity, and a 'remove' button. |
-| Ordering | Click on the 'remove' button of an item | Shows a 1.5-second notification that the item was removed |
+| Ordering | Click on the add button with item quantity less or equal than the available in stock | Shows a 1.5-second notification that the item was added, then displays the item, its quantity, and a 'remove' button below the form |
+| Ordering | Click on the 'remove' button of an item | Shows a 1.5-second notification that the item was removed and removes the item from the page |
 | Ordering | Click on the save button without any items | Shows a 1.5-second notification that there are no items to order |
 | Ordering | Click on the save button with at least one item | Shows a 1.5-second notification that the order was saved |
 | Ordering | Click on the orders button on the navbar | Takes the user to the past orders page |
@@ -113,10 +115,32 @@
 | Orders | Click on the delete button | Opens a modal to confirm deletion |
 | Orders | Click on the yes button | Deletes the order and erases from the page |
 | Orders | Click on the no button | Closes the modal |
-| Sign out | Click sign out button | Confirms signing out and takes user to home page |
+| Sign out | Click sign out button | Confirms signing out and takes user to the landing page |
 | All pages | Click on LinkedIn link in the footer section | Opens LinkedIn page on another tab |
 
-// ADMIN PAGE MANUAL TESTING
++ Admin page
+
+| Page | Action | Result |
+| --- | --- | --- |
+| Admin home page | Click on "Categorys" button | Takes the user to the categories page |
+| Category page | Click on "Add Category" button | Takes the user to the adding category page with name and description fields | 
+| Add Category page | Click on "Save" button with name field filled | Saves the category and takes the user back to the Add Category page and displays a message confirming addition | 
+| Add Category page | Click on "Save and add another" button with name field filled | Saves the category, erases fields and displays a message confirming addition | 
+| Add Category page | Click on "Save and continue editing" button with name field filled | Saves the category, displays confirmation message and adds a delete button |
+| Add Category page | Click on any button without the name field filled | Displays a message that the name field must be filled |
+| Categorys/Items/Orders/Users page | Select entries and select "Delete selected --entries--" on actions dropdown | Asks for confirmation before deleting |
+| Delete confirmation page | Click on "Yes, I'm sure" button | Deletes entry and take back to all entries page |
+| Delete confirmation page | Click on "No, take me back" button | Takes the user back to all entries page |
+| A Category/Item/Order/User page | Click on "Delete" button | Asks for confirmation before deleting |
+| Admin home page | Click on "Items" button | Takes the user to the items page |
+| Items page | Click on "Add item" button | Opens the add item page with the name field, category dropdown, expiration date picker, is critical checkbox and quantity in stock number input |
+| Items/Orders page | Clicks on any of the filters | Filters the items/orders displayed on the screen |
+| Add item page | Click on any of the save buttons without name, category, expiration date or quantity in stock input | Displays a message and marks the fields that must be filled in red |
+| Add item page | Click on any save button with already taken name | Displays a message and marks the name field in red with a informative message |
+| Admin home page | Click on "Orders" button | Takes the user to the orders page |
+| Orders page | Select orders and "Approve orders"/"Reject orders" in actions dropdown | If all orders can be approved/rejected, display a confirmation message, otherwise display a message with which orders couldn't be processed and why |
+| Admin home page | Click on "Users" button | Takes the user to the users page |
+| Users page | Clicks on an user | Displays all the django built-up functionalities and a "is approved" checkbox.
 
 ## Automated testing
 
