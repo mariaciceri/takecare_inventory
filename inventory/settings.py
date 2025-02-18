@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'home',
     'ordering',
+    'django_extensions',
 ]
 
 SITE_ID = 1
