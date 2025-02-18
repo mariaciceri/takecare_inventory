@@ -216,6 +216,7 @@ The page is designed for healthcare professionals, including nurses, doctors, an
 ![Heroku menu with new app creating menu](/docs/images/heroku-new-app.png)
 + In the Deploy tab, look for "Deployment method" and select GitHub;
 ![Heroku menu with deploy selected](/docs/images/heroku-deploy.png)
+
 + Connect to your GitHub account if not done already and right below it, find your repository and connect to Heroku;
 ![Heroku Deployment method and App connected to GitHub](/docs/images/heroku-github.png)
 + Give your app a unique name and set the region accordingly. Click create app.
@@ -239,8 +240,9 @@ The page is designed for healthcare professionals, including nurses, doctors, an
 
 ## Credits
 
-https://www.pexels.com/
-https://unsplash.com/
-https://materializecss.com/
-https://icons8.com/icons
-https://www.simpleimageresizer.com/image-crop
++ Images were sourced from [Pexels](https://www.pexels.com/) and [Unsplash](https://unsplash.com/).
++ General styling was adapted from [Materialize](https://materializecss.com/).
++ The favicon was obtained from [Icons 8](https://icons8.com/icons).
++ [Stackoverflow](https://stackoverflow.com/) and the [Django documentation](https://docs.djangoproject.com/en/5.1/) provided guidance for implementing various functions and methods throughout the project.
++ [ChatGPT](https://chatgpt.com/) assisted in understanding error messages.
++ [Wikipedia](https://en.wikipedia.org/wiki/Instruments_used_in_general_medicine) was used as a reference for general medical equipment when populating the database.
