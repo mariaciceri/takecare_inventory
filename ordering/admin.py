@@ -201,6 +201,10 @@ class CustomUserAdmin(admin.ModelAdmin):
             request.session.pop("admin_user_warnings", None)
 
         return super().has_module_permission(request)
+    
+    def has_add_permission(self, request):
+        """Disables the add permission."""
+        return False
 
 
 admin.site.register(Category)
