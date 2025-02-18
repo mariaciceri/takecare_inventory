@@ -1,4 +1,5 @@
 from django.contrib import admin, messages
+from django.http import HttpRequest
 from django.utils.html import format_html
 from .models import CustomUser, Order, Category, Item, OrderItem
 from django.forms import DateInput
@@ -31,6 +32,10 @@ class OrderAdmin(admin.ModelAdmin):
         if obj:
             return False
         return True
+    
+    def has_add_permission(self, request):
+        """Disables the add permission."""
+        return False
 
     def approve_orders(self, request, queryset):
         """Approves the selected orders."""
