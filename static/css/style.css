@@ -82,16 +82,18 @@ footer {
     justify-self: end;
 }
 
-/* Messages */ 
-#message,
-#editing-message {
-    text-align: end;
-    padding: 5px 0;
-    margin-right: 10px;
+/* Messages */
+#message {
+    position: absolute;
+    right: 10px;
 }
 
 #editing-message {
     color: rgb(70, 70, 162);
+    text-align: end;
+    padding: 5px 0;
+    margin-right: 10px;
+    margin-top: 20px;
 }
 
 /* Informational paragraph */
@@ -301,7 +303,6 @@ nav {
         transition: 0.3s;
     }
 
-    .confirm-delete:hover,
     .no-delete:hover {
         background-color: rgb(36, 48, 54);
         color: #fff;
@@ -309,12 +310,26 @@ nav {
         transition: 0.5s;
     }
 
+    .confirm-delete:hover {
+        background-color: rgb(152, 14, 14);
+        color: #fff;
+        opacity: 0.8;
+        transition: 0.5s;
+    }
+
+    /* Max width for the pages */
     .container {
         max-width: 1000px !important;
     }
 
+    /* Max height for the signup form */
     .signup-page {
         max-height: 80%;
         overflow-y: auto;
+    }
+
+    /* Align message to be 10px to the right to the max width */
+    #message {
+        right: calc((100% - 1000px) / 2 + 10px)
     }
 }
