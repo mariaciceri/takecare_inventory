@@ -1,12 +1,12 @@
 # TESTING
 
-+ All the tests performed on the page are registered here.
++ All the tests performed on the pages are registered below.
+
 
 ## Code Validation
-
 ### HTML/CSS validation
 
-+ The page was run through [HTML W3C Validator](https://validator.w3.org) and [CSS Jigsaw Validator](https://jigsaw.w3.org/css-validator). 
++ All the pages were run through [HTML W3C Validator](https://validator.w3.org) and [CSS Jigsaw Validator](https://jigsaw.w3.org/css-validator). 
 
 | Page | Validator | Screenshot | Notes |
 | --- | --- | --- | --- |
@@ -19,9 +19,7 @@
 | Unauthorized view | HTML | ![HTML validator for unauthorized view page](/docs/images/html-validator-unauthorized.png) | Google validator provides the meta like this |
 | Multiple pages | CSS | ![CSS validator for all CSS files](/docs/images/css-validator-all-pages.png) | no warnings/errors |
 
-
 ### Lighthouse
-
 + Lighthouse in DevTools confirms that the overall performance is efficient, accessibility standards are met, and the chosen colors and fonts ensure readability.
 
     + Home page
@@ -34,7 +32,6 @@
     ![Lighthouse performance screenshot](/docs/images/lighthouse-orders.png)
 
 ### PEP8 
-
 + All Python files were run through [PEP8 CI Python Linter](https://pep8ci.herokuapp.com).
 + Unchanged and/or unused files were excluded as they are expected to be valid.
 
@@ -56,8 +53,7 @@
 | test/test_views.py | ![PEP8 for test/test_views.py](/docs/images/pep8-test-views.png) | no issues |
 
 ## Compatibility
-
-+ The page was tested for compatibility on Firefox, Chrome, and Safari, and it functions flawlessly across all three browsers.
++ The app was tested for compatibility on Firefox, Chrome, and Safari, and it functions flawlessly across all three browsers.
 
     + Firefox:
     ![Page working on firefox gif](/docs/images/firefox.gif)
@@ -68,18 +64,17 @@
     + Safari:
     ![Page working on safari gif](/docs/images/safari.gif)
 
-## Responsiveness
 
-+ The page is responsive and works well for both small and large screens.
+## Responsiveness
++ The app is responsive and works well for both small and large screens.
 
 ![Page responsiveness gif](/docs/images/responsiveness.gif)
 
-## Manual Testing
 
-+ Manual testing was performed to ensure that the application behaves as expected in real-world usage. Each feature was tested by manually interacting with the interface, verifying functionality, and identifying any issues.
+## Manual Testing
++ Manual testing was performed to ensure that the application behaves as expected in real-world usage. Each feature was tested by manually interacting with the interface, verifying functionality, and identifying any issues. These tests ensure that the User Stories are fully implemented and functioning as intended.
 
 ### Users pages
-
 | Page | Action | Result |
 | --- | --- | --- |
 | Home | Click on login button on navbar | Takes user to the page to login. |
@@ -119,7 +114,6 @@
 | All pages | Click on LinkedIn link in the footer section | Opens LinkedIn page on another tab. |
 
 ### Admin page
-
 | Page | Action | Result |
 | --- | --- | --- |
 | Admin home page | Click on "Categorys" button | Takes the user to the categories page. |
@@ -142,16 +136,18 @@
 | Admin home page | Click on "Users" button | Takes the user to the users page. |
 | Users page | Clicks on an user | Displays all the django built-up functionalities and a "is approved" checkbox.
 
-## Automated testing
 
-+ To ensure that the app is running accordingly, automated tests were created for the python files. This is the results for the unit tests. 
+## Automated testing
+### Python Unit Tests
++ To ensure that the app is running accordingly, automated tests were created for the python files. The results are presented below. The tests can be found in [this folder](ordering/test).
 
 ![Automated tests screenshot](docs/images/automated-tests.png)
 
+### JEST
 + Automated tests were not conducted for the JavaScript file due to difficulties in configuring the project for jQuery testing.
 
-## Bugs
 
+## Bugs
 | Bug | Fix |
 | --- | --- |
 | Adding the same item to the order created duplicate entries instead of increasing the quantity. | When adding an item to the order, go through the session and if the item is already present, increase the quantity. |
