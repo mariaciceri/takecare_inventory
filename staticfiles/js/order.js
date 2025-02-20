@@ -1,5 +1,5 @@
 /**
-* Display items in the ordering page
+* Layout for displaying items in the ordering page
 */
 function renderItems(items) {
     if (items.length === 0) {
@@ -44,9 +44,14 @@ function messageDisplay(message) {
     }, 1500);
 }
 
+/**
+ * Runs when the document is ready
+ * - If on the home page for autheticated user ('/'), it loads the items in the session.
+ * - If there are no items, it removes `editingOrderId` from localStorage.
+ * - If the user is editing an order, it displays a message.
+ */
 $(document).ready(function () {
     if (window.location.pathname === "/") {
-        // Populate with items in session
         $.ajax({
             type: "GET",
             url: "session_items",
@@ -54,7 +59,6 @@ $(document).ready(function () {
                 if (response.order_items.length === 0) {
                     localStorage.removeItem("editingOrderId");
                 }
-                // Check if user is editing an order and display message
                 if (localStorage.getItem("editingOrderId")) {
                     id = localStorage.getItem("editingOrderId");
                     $("#editing-message").text(`You are editing order ${id}.`);
@@ -68,7 +72,12 @@ $(document).ready(function () {
         });
     };
 
-    // Add item to session
+    /**
+     * Handles the click event for adding an item to the order.
+     * - Sends an AJAX POST request to add the item.
+     * - On success, displays a message, updates the item list, and clears the quantity field.
+     * - On failure, displays an error message.
+     */
     $(".add-item").click(function (e) {
         e.preventDefault();
 
@@ -90,7 +99,11 @@ $(document).ready(function () {
         });
     });
 
-    // Remove item from session and page
+    /**
+     * Handles item removal via AJAX.
+     * - Sends a POST request to delete the item.
+     * - Removes the item from the UI on success.
+     */
     $("#item-list").on("click", ".remove-item", function (e) {
         e.preventDefault();
 
@@ -115,7 +128,11 @@ $(document).ready(function () {
         );
     });
 
-    // Update item quantity
+    /**
+     * Handles quantity adjustment for an item.
+     * - Deletes the item if quantity is set to 0 or less.
+     * - Sends an AJAX request to update the item quantity.
+     */
     $("#item-list").on("change", ".item-quantity-adjust", function (e) {
         e.preventDefault();
 
@@ -123,7 +140,6 @@ $(document).ready(function () {
         let quantity = $(this).val();
         const csrfToken = $("input[name='csrfmiddlewaretoken']").val();
 
-        // Deletes the item if user manually sets quantity to 0 or less
         if (quantity < 1) {
             $.ajax({
                 type: "POST",
@@ -163,7 +179,11 @@ $(document).ready(function () {
         });
     });
 
-    // Place an order
+    /**
+     * Handles order submission.
+     * - Sends an AJAX request to submit the order.
+     * - Clears the cart and editing state on success.
+     */
     $(".submit-order").on("click", function (e) {
         e.preventDefault();
 
@@ -195,7 +215,12 @@ $(document).ready(function () {
         });
     });
 
-    // Display items in past orders
+    /**
+     * Handles clicking on an order to view its details.
+     * - Prevents default link behavior.
+     * - Sends an AJAX request to retrieve and display order details.
+     * - Shows buttons for editing and deleting the order.
+     */
     $("a[data-id]").on("click", function (e) {
         e.preventDefault();
 
@@ -223,7 +248,7 @@ $(document).ready(function () {
                 );
 
                 const isProcessed = response.status !== 0;
-                // Add undo and edit button
+                // Add buttons to edit and delete order
                 orderDetails.append(
                     `
                     <button type="button" class="edit-order 
@@ -252,7 +277,11 @@ $(document).ready(function () {
         });
     });
 
-    //Edit order
+    /**
+     * Handles editing an order.
+     * - Sets the order ID for editing in localStorage.
+     * - Sends an AJAX request to retrieve the order edit details and redirects to the home page.
+     */
     $(document).on("click", ".edit-order", function (e) {
         e.preventDefault();
 
@@ -271,13 +300,21 @@ $(document).ready(function () {
         });
     });
     
-    // Delete order
+    /**
+     * Handles clicking on the delete order button to confirm deletion.
+     * - Sets the order ID for confirmation when the delete button is clicked.
+     */
     $(document).on("click", ".delete-order", function (e) {
         const orderId = $(this).data("id");
 
         $(".confirm-delete").data("id", orderId);
     });
 
+    /**
+     * Confirms and processes the deletion of an order.
+     * - Sends an AJAX request to delete the order.
+     * - Removes the order from the list display on success.
+     */
     $(".confirm-delete").click(function (e) {
         e.preventDefault();
 
@@ -291,7 +328,6 @@ $(document).ready(function () {
                 'X-CSRFToken': csrfToken
             },
             success: function (response) {
-                // Remove the order from the list
                 $(`a[data-id="${orderId}"]`).closest("li").slideUp("slow", function () {
                     $(this).remove();
                 });
@@ -302,7 +338,12 @@ $(document).ready(function () {
         });
     });
 
-    // Filter items by category
+    /**
+     * Filters items based on the selected category.
+     * - Sends an AJAX request to retrieve items matching the selected category.
+     * - Populates the item dropdown with filtered items.
+     * - Reinitializes the select dropdown for updated options.
+     */
     $("#category").change(function () {
         const category = $(this).val();
 
@@ -328,7 +369,12 @@ $(document).ready(function () {
         });
     });
 
-    // Close/show information about how to use the app
+    /**
+     * Toggles the visibility of the information section and updates the close button text.
+     * - Slides the information section in or out.
+     * - Updates the close button's text to either a down arrow or a cross based on visibility.
+     * - Adds/removes the "form-text" class from the parent element when the information section is toggled.
+     */
     $(".close-form-text").click(function() {
         let isVisible = $(".information").is(":visible");
         
