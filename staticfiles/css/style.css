@@ -32,7 +32,7 @@ main {
 
 .authorized-nav,
 footer {
-    background: url(../images/background.jpg) no-repeat center center fixed;
+    background: url("../images/background.jpg") no-repeat center center fixed;
     background-size: cover;
 }
 
@@ -82,16 +82,18 @@ footer {
     justify-self: end;
 }
 
-/* Messages */ 
-#message,
-#editing-message {
-    text-align: end;
-    padding: 5px 0;
-    margin-right: 10px;
+/* Messages */
+#message {
+    position: absolute;
+    right: 10px;
 }
 
 #editing-message {
     color: rgb(70, 70, 162);
+    text-align: end;
+    padding: 5px 0;
+    margin-right: 10px;
+    margin-top: 20px;
 }
 
 /* Informational paragraph */
@@ -108,6 +110,7 @@ footer {
     text-align: right;
     cursor: pointer;
     padding: 0 20px;
+    margin-top: 20px;
 }
 
 /* Form */
@@ -185,14 +188,15 @@ form {
 
 /* Login, signup and logout page */
 .account-body {
-    background: url(../images/background.jpg) no-repeat center center fixed;
+    background: url("../images/background.jpg") no-repeat center center fixed;
     background-size: cover;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    position: relative;
 }
 
 nav {
@@ -216,18 +220,20 @@ nav {
     color: #fff;
     font-size: xx-large;
     border-radius: 5px;
+    position: absolute;
+    top: 3rem;
 }
 
 .login-page,
 .signup-page,
 .signout-page {
-    margin: 0 2rem;
     padding: 0 1rem;
     border: 1px solid black;
     border-radius: 10px;
     background-color: rgb(245, 245, 245);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    width: 400px;
+    width: 80%;
+    max-width: 350px;
 }
 
 .login {
@@ -243,13 +249,13 @@ nav {
     margin: 0;
 }
 
-.signup-page {
-    min-height: min-content;
-}
-
 .signup,
 .signout {
     margin-bottom: 3rem;
+}
+
+.signup-page h1 {
+    margin-top: 1.5rem;
 }
 
 .message-reset {
@@ -298,7 +304,6 @@ nav {
         transition: 0.3s;
     }
 
-    .confirm-delete:hover,
     .no-delete:hover {
         background-color: rgb(36, 48, 54);
         color: #fff;
@@ -306,7 +311,26 @@ nav {
         transition: 0.5s;
     }
 
+    .confirm-delete:hover {
+        background-color: rgb(152, 14, 14);
+        color: #fff;
+        opacity: 0.8;
+        transition: 0.5s;
+    }
+
+    /* Max width for the pages */
     .container {
         max-width: 1000px !important;
+    }
+
+    /* Max height for the signup form */
+    .signup-page {
+        max-height: 80%;
+        overflow-y: auto;
+    }
+
+    /* Align message to be 10px to the right to the max width */
+    #message {
+        right: calc((100% - 1000px) / 2 + 10px)
     }
 }
