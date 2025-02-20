@@ -11,8 +11,8 @@
 
   <p>
     {% blocktrans %}
-    Already have an account? Then please <a href="{{ login_url }}">sign in</a>.
-    {% endblocktrans %} Or go back to <a href="{% url 'home:home' %}">Home.</a>
+    Already have an account? Then please <a href="{{ login_url }}" aria-label="Goes to login page">sign in</a>.
+    {% endblocktrans %} Or go back to <a href="{% url 'home:home' %}" aria-label="Goes to landing home page">Home.</a>
   </p>
 
   <form class="signup col s12" id="signup_form" method="post" action="{% url 'account_signup' %}">
@@ -63,7 +63,7 @@
     </div>
     <div class="row">
       <div class="input-field col s12">
-        <label for="id_email">Email</label>
+        <label for="id_email">Email <span><small>(optional)</small></span></label>
         {{ form.email|add_class:"validate" }}
       </div>
     </div>

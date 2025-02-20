@@ -35,41 +35,45 @@
     <header>
         <nav class="{% if user.is_authenticated %}authorized-nav{% else %}blue-grey{% endif%}">
             <div class="nav wrapper">
-                <a href="{{ order_url }}" class="brand-logo right" {% if user.is_authenticated %}id="brand-logo-color"{% endif %}>
+                <a href="{{ order_url }}" class="brand-logo right" {% if user.is_authenticated %}id="brand-logo-color"{% endif %}
+                aria-label="Goes to home page">
                     TakeCare
                 </a>
-                <a href="{{ order_url }}" data-target="mobile-demo" class="sidenav-trigger" {% if user.is_authenticated %}id="sidenav-trigger"{% endif %}>
+                <a href="{{ order_url }}" data-target="mobile-demo" class="sidenav-trigger" {% if user.is_authenticated %}id="sidenav-trigger"{% endif %}
+                aria-label="Icon for mobile view of menu">
                     <i class="material-icons">menu</i>
                 </a>
                 <ul id="nav-mobile" class="left hide-on-med-and-down">
                     {% if user.is_authenticated and user.is_approved %}
                     <li>
                         <a class="{% if request.path == order_url %}active" aria-current="page{% endif %}"
-                            href="{{ order_url }}">
+                            href="{{ order_url }}" aria-label="Goes to ordering page">
                             {% if request.path == '/home/' %}Start{% else %}Home{% endif %}
                         </a>
                     </li>
                     <li>
                         <a class="{% if request.path == orders_url %}active" aria-current="page{% endif %}"
-                            href="{{ orders_url }}">
+                            href="{{ orders_url }}" aria-label="Goes to past orders page">
                             Orders
                         </a>
                     </li>
                     {% elif not user.is_authenticated %}
                         <li>
-                            <a class="{% if request.path == login_url %}active" aria-current="page{% endif %}" href="{{ login_url }}">
+                            <a class="{% if request.path == login_url %}active" aria-current="page{% endif %}" href="{{ login_url }}"
+                            aria-label="Goes to login page">
                                 Login
                             </a>
                         </li>
                         <li>
-                            <a class="{% if request.path == signup_url %}active" aria-current="page{% endif %}" href="{{ signup_url }}">
+                            <a class="{% if request.path == signup_url %}active" aria-current="page{% endif %}" href="{{ signup_url }}"
+                            aria-label="Goes to registration page">
                                 Register
                             </a>
                         </li>
                     {% endif %}
                     {% if user.is_authenticated %}
                     <li>
-                        <a aria-current="page" href="{{ logout_url}}">
+                        <a aria-current="page" href="{{ logout_url}}" aria-label="Goes to logout confirmation page">
                             Logout
                         </a>
                     </li>
@@ -82,31 +86,33 @@
             {% if user.is_authenticated and user.is_approved %}
             <li>
                 <a class="{% if request.path == order_url %}active" aria-current="page{% endif %}"
-                    href="{{ order_url }}">
+                    href="{{ order_url }}" aria-label="Ordering page link for mobile view">
                     {% if request.path == '/home/' %}Start{% else %}Home{% endif %}
                 </a>
             </li>
             <li>
                 <a class="{% if request.path == orders_url %}active" aria-current="page{% endif %}"
-                    href="{{ orders_url }}">
+                    href="{{ orders_url }}" aria-label="Past orders page link for mobile view">
                     Orders
                 </a>
             </li>
             {% elif not user.is_authenticated %}
             <li>
-                <a class="{% if request.path == login_url %}active" aria-current="page{% endif %}" href="{{ login_url }}">
+                <a class="{% if request.path == login_url %}active" aria-current="page{% endif %}" href="{{ login_url }}"
+                aria-label="Login page link for mobile view">
                     Login
                 </a>
             </li>
             <li>
-                <a class="{% if request.path == signup_url %}active" aria-current="page{% endif %}" href="{{ signup_url }}">
+                <a class="{% if request.path == signup_url %}active" aria-current="page{% endif %}" href="{{ signup_url }}"
+                aria-label="Registration page link for mobile view">
                     Register
                 </a>
             </li>
             {% endif %}
             {% if user.is_authenticated %}
             <li>
-                <a aria-current="page" href="{{ logout_url}}">
+                <a aria-current="page" href="{{ logout_url}}" aria-label="Logout link for mobile view">
                     Logout
                 </a>
             </li>
@@ -138,7 +144,7 @@
     <footer class="page-footer">
         <div class="footer-copyright">
             <div class="container">
-                © 2025 Copyright TakeCare All Rights Reserved
+                © 2025 TakeCare | Created by Maria Ciceri | All Rights Reserved
                 <a class="grey-text text-lighten-4 right tooltipped" href="https://www.linkedin.com/"
                 target="_blank" aria-label="Open LinkedIn page on a new tab" rel="noopener" 
                 data-tooltip="Follow us here" data-position="top">
