@@ -13,46 +13,7 @@
     - They are responsible for updating item categories, stock quantities, expiration dates, and marking critical products.
 
 
-## UX Design
-
-The page is designed for healthcare professionals, including nurses, doctors, and administrative/warehouse staff responsible for managing medical supplies. It is particularly useful for clinics, hospitals, and care facilities that need an efficient way to track stock levels, place orders, and ensure essential items are always available. Managers benefit from automated alerts for low stock and expiring products, reducing the risk of shortages. While the system is optimized for desktop use in clinical settings, its responsive design ensures that users can access it seamlessly from mobile devices when needed.
-
-### Color and Design Choices
-
-+ The color scheme of TakeCare Inventory Management is primarily composed of shades of blue and gray, carefully chosen to align with the healthcare industry’s aesthetic. Blue is often associated with trust, professionalism, and calmness. Gray complements this by adding a sense of neutrality and balance, ensuring the interface remains clean and easy to navigate without unnecessary distractions. Together, these colors create a professional and reassuring atmosphere for users managing critical inventory tasks.
-+ The images used throughout the platform follow the same blue and gray tones to maintain visual consistency and reinforce the theme of reliability. However, the hero image on the general home page features touches of yellow and red to introduce a sense of energy and urgency. This contrast helps capture attention and conveys the importance of efficient inventory management, encouraging users to engage with the system proactively.
-
-### Wireframe
-
-+ The initial wireframes for this project were created using [Balsamiq](https://balsamiq.com/):
-+ Changes were made throughout the project delevolpment to improve UX and make the navigation more intuitive.
-
-    + Login page:
-
-    ![Login page](/docs/images/wireframe-login.png)
-
-    + Main ordering page without ordering items:
-
-    ![Page without order](/docs/images/wireframe-without-order.png)
-
-    + Main ordering page with ordering items:
-
-    ![Page with order](/docs/images/wireframe-with-order.png)
-
-    + Past orders page:
-
-    ![Order page](/docs/images/wireframe-orders-page.png)
-
-    + Past pending order:
-
-    ![Pending order](/docs/images/wireframe-pending-order.png)
-
-    + Past approved order:
-
-    ![Approved order](/docs/images/wireframe-approved-order.png)
-
 ## User Stories
-
 + As a first-time visitor, the user:
     + Is taken to the home page:
         + The landing page introduces the purpose and features of the app.
@@ -88,8 +49,44 @@ The page is designed for healthcare professionals, including nurses, doctors, an
     + See notifications when there are new pending user or order approvals.
 
 
-## Features
+## UX Design
+The application is designed for healthcare professionals, including nurses, doctors, and administrative/warehouse staff responsible for managing medical supplies. It is particularly useful for clinics, hospitals, and care facilities that need an efficient way to track stock levels, place orders, and ensure essential items are always available. Managers benefit from automated alerts for low stock and expiring products, reducing the risk of shortages. While the system is optimized for desktop use in clinical settings, its responsive design ensures that users can access it seamlessly from mobile devices when needed.
 
+### Color and Design Choices
++ The color scheme of TakeCare Inventory Management is primarily composed of shades of blue and gray, carefully chosen to align with the healthcare industry’s aesthetic. Blue is often associated with trust, professionalism, and calmness. Gray complements this by adding a sense of neutrality and balance, ensuring the interface remains clean and easy to navigate without unnecessary distractions. Together, these colors create a professional and reassuring atmosphere for users managing critical inventory tasks.
++ The images used throughout the platform follow the same blue and gray tones to maintain visual consistency and reinforce the theme of reliability. However, the hero image on the general home page features touches of yellow and red to introduce a sense of energy and urgency. This contrast helps capture attention and conveys the importance of efficient inventory management, encouraging users to engage with the system proactively.
++ The favicon was selected to represent the target audience of the application. However, its dark design may not be ideal for users browsing in dark mode.
+
+### Wireframe
++ The initial wireframes for this project were created using [Balsamiq](https://balsamiq.com/):
++ Changes were made throughout the project delevolpment to improve UX and make the navigation more intuitive.
+
+    + Login page:
+
+    ![Login page](/docs/images/wireframe-login.png)
+
+    + Main ordering page without ordering items:
+
+    ![Page without order](/docs/images/wireframe-without-order.png)
+
+    + Main ordering page with ordering items:
+
+    ![Page with order](/docs/images/wireframe-with-order.png)
+
+    + Past orders page:
+
+    ![Order page](/docs/images/wireframe-orders-page.png)
+
+    + Past pending order:
+
+    ![Pending order](/docs/images/wireframe-pending-order.png)
+
+    + Past approved order:
+
+    ![Approved order](/docs/images/wireframe-approved-order.png)
+
+
+## Features
 ### Home page
 - If the user is unauthenticated:
     - They can login or register by clicking on the links in the navbar.
@@ -162,22 +159,37 @@ The page is designed for healthcare professionals, including nurses, doctors, an
 
 ![Deletion confirmation popup](docs/images/delete-confirmation.png)
 
-## Technologies
+## Future improvements
++ Implement notifications for users when their orders are approved or rejected.
++ Add a search feature to quickly find items across categories.
++ Implement multi-language support for broader accessibility.
++ Add user roles with varying levels of access (e.g., supervisor, staff).
++ Enhance reporting capabilities for inventory analytics (e.g., stock trends).
++ Add real-time stock level updates when items are added to or removed from orders.
 
-+ [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML) structures the page.
+
+## Technologies
+### Front-end
++ [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML) structures the pages.
 + [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS) defines the style and layout.
 + [Materialize](https://materializecss.com/) provides the overall styling framework.
-+ [Git](https://git-scm.com/) manages version control.
-+ [Github](https://github.com/) hosts the project.
-+ [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript) with [JQuery](https://jquery.com/) add interactivity to the page.
++ [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript) with [jQuery](https://jquery.com/) add interactivity to the pages.
+
+### Backend
 + [Django](https://www.djangoproject.com/) connects the front-end and back-end.
-+ [Django Allauth](https://docs.allauth.org/en/latest/) for user authentication.
-+ [PostgresQL](https://www.postgresql.org/) (provided by Code Institute) stores data.
++ [Django Allauth](https://docs.allauth.org/en/latest/) handles user authentication.
++ [PostgreSQL](https://www.postgresql.org/) (provided by Code Institute) stores data in production.
++ [SQLite](https://www.sqlite.org/) stores data in the development fase (when `DEBUG` is `True`).
++ [Python](https://www.python.org/) is the main language for the project.
+
+### Deployment and Version Control
++ [Git](https://git-scm.com/) manages version control.
++ [GitHub](https://github.com/) hosts the project.
 + [Heroku](https://www.heroku.com/) handles deployment.
 + [Whitenoise](https://whitenoise.readthedocs.io/en/latest/) serves static files to Heroku.
 
-## Database Design
 
+## Database Design
 - The Entity-Relationship Diagram for the project was created on [dbdiagram.io](https://dbdiagram.io/home) before starting the project and adjusted as small changes were made.
 
 ![erd](/docs/images/erd.png)
@@ -196,7 +208,7 @@ The page is designed for healthcare professionals, including nurses, doctors, an
 ![kanban](docs/images/kanban.png)
 
 ## Deployment
-
+### First steps
 + To deploy both locally and to an external app, you must first: 
     + Clone the repository from GitHub page by running the command `git clone https://github.com/mariaciceri/takecare_inventory.git`;
     + Alternatively, download it as a ZIP file from `https://github.com/mariaciceri/takecare_inventory` and extract it to a chosen location in your computer;
@@ -209,6 +221,8 @@ The page is designed for healthcare professionals, including nurses, doctors, an
         + `DATABASE_URL` - and provide a link to a database of choice.
     + Save the project on your own GitHub account by using the command `git push`.
     + To be able to use the admin panel, run `python3 manage.py createsuperuser` and follow the instructions, then use the credentials to access the admin panel and add items and categories to the databases.
+
+    + Make sure to follow these steps before continuing with one of the deployment methods below.
 
 ### Deployment to Heroku
 
@@ -236,7 +250,7 @@ The page is designed for healthcare professionals, including nurses, doctors, an
 
 ## Testing
 
-+ Multiple tests were conducted to verify that the page functions correctly and is fully responsive. For a detailed overview of all tests, refer to [TESTING.md](TESTING.md) 
++ Multiple tests were conducted to verify that the app functions correctly and is fully responsive. For a detailed overview of all tests, refer to [TESTING.md](TESTING.md) 
 
 ## Credits
 
@@ -246,3 +260,5 @@ The page is designed for healthcare professionals, including nurses, doctors, an
 + [Stackoverflow](https://stackoverflow.com/) and the [Django documentation](https://docs.djangoproject.com/en/5.1/) provided guidance for implementing various functions and methods throughout the project.
 + [ChatGPT](https://chatgpt.com/) assisted in understanding error messages.
 + [Wikipedia](https://en.wikipedia.org/wiki/Instruments_used_in_general_medicine) was used as a reference for general medical equipment when populating the database.
++ [VSCode](https://code.visualstudio.com/) is the integrated development environment (IDE) used for the project.
++ Iuliia Konovaloca's [e-commerce GitHub repository](https://github.com/IuliiaKonovalova/e-commerce) provided guidance for structuring the README.md and TESTING.md files.
