@@ -11,7 +11,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 DEBUG = os.environ.get("DEVELOPMENT") == "True"
 
-ALLOWED_HOSTS = ['.herokuapp.com']
+ALLOWED_HOSTS = ['takecare-inventory.onrender.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
