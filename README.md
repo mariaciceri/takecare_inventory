@@ -1,6 +1,6 @@
 # TakeCare Inventory Management
 
-[TakeCare Inventory Management](https://takecare-inventory-187635d57664.herokuapp.com/) is a web application designed for healthcare professionals to efficiently manage stock levels and request products. Users can easily filter items to find what they need and view their selected products in a cart on the same page, making order management more intuitive. For managers, the admin panel provides important alerts when items are low in stock, close to expiration, or when new users need approval, ensuring smooth inventory oversight.
+[TakeCare Inventory Management](https://takecare-inventory.onrender.com) is a web application designed for healthcare professionals to efficiently manage stock levels and request products. Users can easily filter items to find what they need and view their selected products in a cart on the same page, making order management more intuitive. For managers, the admin panel provides important alerts when items are low in stock, close to expiration, or when new users need approval, ensuring smooth inventory oversight.
 
 - User Access
     - Users must log in to access the platform.
